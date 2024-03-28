@@ -1,0 +1,31 @@
+rot 
+grün
+blau
+
+
+1, 2, 3
+
+
+3 * 2 * 1
+
+
+
+Approach:
+---------
+
+Terms:
+Setting    - A setting of colors
+Response   - A response to a setting
+Assumption - A particular assumption of a correct sub-setting that matches / does not contradict a particular response
+
+
+1) Enumerate all possible combinations of color settings wrt to all past testings
+1.1) Every 
+
+
+2) Pick one new setting and set it
+
+GOTO 1)
+
+
+
