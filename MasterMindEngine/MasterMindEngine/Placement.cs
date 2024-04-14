@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace MasterMindEngine
 {
+    /// <summary>
+    /// This class represents the placement of one codeline in the game.
+    /// </summary>
     public class Placement
     {
-        public const int Size = 4;
+        public const int Size = 4; 
         
         public Placement(CodeColors[] code)
         {
@@ -16,22 +14,47 @@ namespace MasterMindEngine
         }
 
         /// <summary>
-        /// Check whether the placement is a valid one
+        /// Check whether the placement is a valid one, i.e, there are no empty slots and no repeated colors
         /// </summary>
         /// <returns>false if the placement is invalid</returns>
-        public bool isValid()
-        {
-            if(Code.Any(c=>c == CodeColors.None))
+        public bool isValid(EnumOptions enumOptions)
+        { 
+            if(enumOptions.HasFlag(EnumOptions.NoneIsAllowed) == false && Code.Any(c=>c == CodeColors.None))
             {
                 return false;
             }   
 
-            if(Code.Distinct().Count() == Code.Length)
+            if(enumOptions.HasFlag(EnumOptions.ColorOnlyIUsedOnce))
             {
-                return true;
-            }   
+                if(Code.Where(c=>c != CodeColors.None).Distinct().Count() != Code.Where(c=>c != CodeColors.None).Count())
+                {
+                    return false;
+                }    
+            }
 
-            return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Determine whether a placement fits another placement
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True if the placement fits the other placement</returns>
+        public bool Fits(Placement other)
+        {            
+            for (int i = 0; i < Placement.Size; i++)
+            {
+                if(other.Code[i] != CodeColors.None && other.Code[i] != Code[i])
+                {
+                    return false;
+                }                                
+            }
+            return true;
+        }
+
+        internal bool Fits(Placement p, Hint h)
+        {
+            throw new NotImplementedException();
         }
 
         public CodeColors[] Code { get; private set; } = new CodeColors[Size];

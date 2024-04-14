@@ -14,5 +14,7 @@ namespace MasterMindEngine
         }
 
         public HintColors[] Hints { get; private set; } = new HintColors[Placement.Size];
+
+        
     }
 }
