@@ -37,9 +37,47 @@ namespace MasterMindEngineTests
             var p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
             var h = new Hint( new HintColors[] { HintColors.White, HintColors.White, HintColors.Black, HintColors.None});
 
-            var placements = Enumerators.GetPossiblePartialNextPlacements(p, h);            
+            var placements = Enumerators.GetPossibleNextPartialPlacements(p, h);            
 
-            Assert.AreEqual(6, placements.Count());
+            Assert.AreEqual(36, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.Black, HintColors.None, HintColors.None, HintColors.None});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);            
+
+            Assert.AreEqual(4, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.White, HintColors.None, HintColors.None, HintColors.None});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);       
+            
+            Assert.AreEqual(12, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.Black, HintColors.Black, HintColors.Black, HintColors.Black});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);       
+            
+            Assert.AreEqual(1, placements.Count());
+        }
+
+        [TestMethod]
+        public void TestIEquality()
+        {
+            var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });
+            var p2 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });
+
+            
+            Assert.AreEqual(p1, p2);
+
+
+            var list = new List<Placement>{p1, p2};
+
+            var list2 = list.Distinct().ToList();
+
+            Assert.AreEqual(list2.Count, 1);
         }
 
 
@@ -62,10 +100,26 @@ namespace MasterMindEngineTests
             var r2 = p2.Fits(p1);
 
             Assert.IsFalse(r1);  // here we expect false, because p2 requires a blue in the second position, which p1 does not have
-            Assert.IsTrue(r2);
-
-            
+            Assert.IsTrue(r2);            
         }
 
+
+        [TestMethod]
+        public void TestIntersectOfTwoPlacementEnumerations()
+        {
+            var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });
+
+            var placements1 = Enumerators.GetPlacements(p1).ToList();
+            Assert.AreEqual(6, placements1.Count);
+
+            var p2 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.None, CodeColors.None });
+
+            var placements2 = Enumerators.GetPlacements(p2).ToList();
+            Assert.AreEqual(2, placements2.Count);
+
+            var placements3 = placements1.Intersect(placements2).ToList();
+
+            Assert.AreEqual(2, placements3.Count);
+        }
     }
 }

@@ -114,62 +114,75 @@ namespace MasterMindEngine
         /// <param name="placement"></param>
         /// <param name="hint"></param>
         /// <returns></returns>
-        public static IEnumerable<Placement> GetPossiblePartialNextPlacements(Placement placement, Hint hint)
+        public static IEnumerable<Placement> GetPossibleNextPartialPlacements(Placement placement, Hint hint)
         {
             var placementUnderConstruction = Placement.CreateEmpty(); // start with an empty placement and the full set of hints
-            return GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hint);
+            return GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hint).Distinct();
         }
 
         private static IEnumerable<Placement> GetPossiblePartialNextPlacementsInternal(Placement placement, Placement placementUnderConstruction,  Hint hint)
         {
+            // generate copies of the hint and placement because we are in recursive calls
+            var placementCopy = placement.Clone();
+            var placementUnderConstructionCopy = placementUnderConstruction.Clone();
             var hintCopy = hint.Clone();
 
-            while(hintCopy.Hints.Count(h=>h != HintColors.None) > 0)
-            {            
-                var k = Array.FindIndex(hintCopy.Hints, h => h != HintColors.None); // get the first hint that is not None                
-                var h = hintCopy.Hints[k];
-                hintCopy.Hints[k] = HintColors.None;    // "erase" that entry since it is used here                
+            if(hintCopy.Hints.Count(h=>h != HintColors.None) == 0)
+            {
+                yield return placementUnderConstructionCopy;
+                yield break;
+            }   
 
-                for(int i = 0; i < Placement.Size; ++i)
+                    
+            var hi = Array.FindIndex(hintCopy.Hints, h => h != HintColors.None); // get the first hint that is set               
+            var h = hintCopy.Hints[hi];
+            hintCopy.Hints[hi] = HintColors.None;    // "erase" that entry since it is used here                
+
+            for(int i = 0; i < Placement.Size; ++i)
+            {
+                var c = placementCopy.Code[i];
+                if(c != CodeColors.None)
                 {
-                    var c = placement.Code[i];
-                    if(c != CodeColors.None)
+                    placementCopy.Code[i] = CodeColors.None; // remove the color from the placement
+
+                    if(h == HintColors.White)
                     {
-                        if(h == HintColors.White)
+                        // place the color c at all other positions than i
+                        for(int j = 0; j < Placement.Size; ++j)
                         {
-                            // place the color c at all other positions than i
-                            for(int j = 0; j < Placement.Size; ++j)
+                            if(j != i)
                             {
-                                if(j != i)
-                                {
-                                    if(placementUnderConstruction.Code[j] == CodeColors.None)
-                                    {                                     
-                                        placementUnderConstruction.Code[j] = c;
-                                        foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hintCopy))
-                                        {
-                                            yield return p;
-                                        }                                        
-                                    }                                                                                                            
-                                }
+                                if(placementUnderConstructionCopy.Code[j] == CodeColors.None)
+                                {                                     
+                                    placementUnderConstructionCopy.Code[j] = c;
+                                    foreach(var p in GetPossiblePartialNextPlacementsInternal(placementCopy, placementUnderConstructionCopy, hintCopy))
+                                    {
+                                        yield return p;
+                                    }            
+                                    // take back last color assignment
+                                    placementUnderConstructionCopy.Code[j] = CodeColors.None;
+                                }                                                                                                            
                             }
                         }
-
-                        if(h == HintColors.Black)
-                        {
-                            // place the color c at position i
-                            if(placementUnderConstruction.Code[i] == CodeColors.None)
-                            {
-                                placementUnderConstruction.Code[i] = c;
-                                foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hintCopy))
-                                {
-                                    yield return p;
-                                }                                        
-                            }                                                                                                            
-                        }   
                     }
-                }                             
-            }
-            yield break;
+
+                    if(h == HintColors.Black)
+                    {
+                        // place the color c at position i
+                        if(placementUnderConstructionCopy.Code[i] == CodeColors.None)
+                        {
+                            placementUnderConstructionCopy.Code[i] = c;
+                            foreach(var p in GetPossiblePartialNextPlacementsInternal(placementCopy, placementUnderConstructionCopy, hintCopy))
+                            {
+                                yield return p;
+                            }                                        
+                            // take back last color assignment
+                            placementUnderConstructionCopy.Code[i] = CodeColors.None;
+                        }                                                                                                            
+                    }                                                 
+                }
+                placementCopy.Code[i] = c;
+            }                                                                      
         }
     }
 }

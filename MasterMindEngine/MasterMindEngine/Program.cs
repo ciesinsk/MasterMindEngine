@@ -38,15 +38,30 @@
             //    Console.WriteLine();
             //}
 
-            Console.WriteLine("All placements, mulitple color usage allowed, none is allowed, color only once");
+            //Console.WriteLine("All placements, mulitple color usage allowed, none is allowed, color only once");
 
-            foreach(var p in Enumerators.GetPlacements(EnumOptions.NoneIsAllowed| EnumOptions.ColorOnlyIUsedOnce))
+            //foreach(var p in Enumerators.GetPlacements(EnumOptions.NoneIsAllowed| EnumOptions.ColorOnlyIUsedOnce))
+            //{
+            //    foreach(var c in p.Code)
+            //    {
+            //        Console.Write(c + " ");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+
+            Console.WriteLine("All possible next placements for given hint");
+            var p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            var h = new Hint( new HintColors[] { HintColors.Black, HintColors.Black, HintColors.Black, HintColors.Black});
+
+            Console.WriteLine($"Placement: {p}");
+            Console.WriteLine($"Hint: {h}");
+
+            var placements = Enumerators.GetPossibleNextPartialPlacements(p, h);  
+
+            foreach(var p1 in placements)
             {
-                foreach(var c in p.Code)
-                {
-                    Console.Write(c + " ");
-                }
-                Console.WriteLine();
+                Console.WriteLine($"{p1}");                
             }
 
 

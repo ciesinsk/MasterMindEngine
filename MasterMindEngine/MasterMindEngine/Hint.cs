@@ -11,24 +11,32 @@ namespace MasterMindEngine
     {                
         public Hint Clone()
         {
-            var hintsCopy = new HintColors[Placement.Size];
+            var newHints = new HintColors[Placement.Size];
             for (int i = 0; i < Placement.Size; i++)
             {
-                hintsCopy[i] = Hints[i];
+                newHints[i] = Hints[i];
             }
 
-            return new Hint(hintsCopy);
+            return new Hint(newHints);
         }
 
 
         public Hint(HintColors[] hints)
         {
-            
             Hints = hints;
         }
 
         public HintColors[] Hints { get; private set; } = new HintColors[Placement.Size];
 
-        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach(var h in Hints)
+            {
+                sb.Append(h + " ");                    
+            }            
+
+            return sb.ToString();
+        }
     }
 }

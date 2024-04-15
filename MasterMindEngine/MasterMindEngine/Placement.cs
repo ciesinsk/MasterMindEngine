@@ -1,10 +1,12 @@
 ﻿
+using System.Text;
+
 namespace MasterMindEngine
 {
     /// <summary>
     /// This class represents the placement of one codeline in the game.
     /// </summary>
-    public class Placement
+    public class Placement: IEquatable<Placement>
     {
         public const int Size = 4; 
         
@@ -68,6 +70,10 @@ namespace MasterMindEngine
             return true;
         }
 
+        /// <summary>
+        /// Deep copy of the placement
+        /// </summary>
+        /// <returns>A deep copy of the placement</returns>
         public Placement Clone()
         {
             // cloe the code array to avoid by-reference copying
@@ -80,7 +86,68 @@ namespace MasterMindEngine
             return new Placement(newCode);
         }
 
-
+        /// <summary>
+        /// The actual placement of the colors, in the original game called "Code"
+        /// </summary>
         public CodeColors[] Code { get; private set; } = new CodeColors[Size];
+
+        /// <summary>
+        /// Standard override of the ToString method
+        /// </summary>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach(var c in Code)
+            {
+                sb.Append(c + " ");                    
+            }            
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Standard override of the Equals method
+        /// </summary>
+        public bool Equals(Placement? other)
+        {
+            if(other == null)
+            {
+                return false;
+            }   
+
+            for (int i = 0; i < Size; i++)
+            {
+                if(other.Code[i] != Code[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Standard override of the Equals method
+        /// </summary>
+        public override bool Equals(object? other)
+        {
+            var otherPlacement = other as Placement;
+            return Equals(otherPlacement);
+        }
+
+        /// <summary>
+        /// Standard override of the GetHashCode method
+        /// </summary>
+        public override int GetHashCode()
+        {
+            if (Code == null) return 0;
+            unchecked
+            {
+                int hash = 17;
+                for(int i = 0; i < Code.Length; i++)
+                    hash = 31 * hash + Code[i].GetHashCode();
+                return hash;
+            }
+        }
     }
 }
