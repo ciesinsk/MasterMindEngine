@@ -8,6 +8,18 @@ namespace MasterMindEngine
 {
     public class Game
     {
-        public const int Turns = 10;
+        public const int MaxTurns = 10;
+
+        public List<Placement> Turns = new List<Placement>();
+
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Turn: {Turns.Count}");
+
+            return sb.ToString();
+        }
     }
 }
