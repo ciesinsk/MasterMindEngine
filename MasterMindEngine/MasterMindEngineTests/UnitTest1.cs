@@ -32,6 +32,18 @@ namespace MasterMindEngineTests
         }
 
         [TestMethod]
+        public void TestEnumerationOfPossibleMatching()
+        {
+            var p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            var h = new Hint( new HintColors[] { HintColors.White, HintColors.White, HintColors.Black, HintColors.None});
+
+            var placements = Enumerators.GetPossiblePartialNextPlacements(p, h);            
+
+            Assert.AreEqual(6, placements.Count());
+        }
+
+
+        [TestMethod]
         public void TestEnumerationOfMatchingPlacements()
         {
             var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });

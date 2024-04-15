@@ -116,11 +116,11 @@ namespace MasterMindEngine
         /// <returns></returns>
         public static IEnumerable<Placement> GetPossiblePartialNextPlacements(Placement placement, Hint hint)
         {
-            var partialPlacement = Placement.CreateEmpty();
-            return GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hint);
+            var placementUnderConstruction = Placement.CreateEmpty(); // start with an empty placement and the full set of hints
+            return GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hint);
         }
 
-        private static IEnumerable<Placement> GetPossiblePartialNextPlacementsInternal(Placement placement, Placement partialPlacement,  Hint hint)
+        private static IEnumerable<Placement> GetPossiblePartialNextPlacementsInternal(Placement placement, Placement placementUnderConstruction,  Hint hint)
         {
             var hintCopy = hint.Clone();
 
@@ -142,10 +142,10 @@ namespace MasterMindEngine
                             {
                                 if(j != i)
                                 {
-                                    if(partialPlacement.Code[j] == CodeColors.None)
+                                    if(placementUnderConstruction.Code[j] == CodeColors.None)
                                     {                                     
-                                        partialPlacement.Code[j] = c;
-                                        foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hintCopy))
+                                        placementUnderConstruction.Code[j] = c;
+                                        foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hintCopy))
                                         {
                                             yield return p;
                                         }                                        
@@ -157,10 +157,10 @@ namespace MasterMindEngine
                         if(h == HintColors.Black)
                         {
                             // place the color c at position i
-                            if(partialPlacement.Code[i] == CodeColors.None)
+                            if(placementUnderConstruction.Code[i] == CodeColors.None)
                             {
-                                partialPlacement.Code[i] = c;
-                                foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hintCopy))
+                                placementUnderConstruction.Code[i] = c;
+                                foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hintCopy))
                                 {
                                     yield return p;
                                 }                                        
