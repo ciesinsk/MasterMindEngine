@@ -23,7 +23,6 @@ namespace MasterMindEngine
             return GetPlacements(enumValues, enumOptions);
         }
 
-
         /// <summary>
         /// Enumerate all placements with the given colors 
         /// </summary>
@@ -90,22 +89,7 @@ namespace MasterMindEngine
                     yield return p;
                 }
             }
-        }
-        
-
-
-        public static IEnumerable<Placement> GetPlacements(Placement other, Hint hint)
-        {
-            foreach (var p in GetPlacements())
-            {
-                if (p.Fits(other))
-                {
-                    yield return p;
-                }
-            }
-        }
-
-        // enuerate possible future placements that respect a placement and a hint
+        }               
 
         /// <summary>
         /// Enumerates all possible placements that fit the given placement and hint
@@ -117,50 +101,50 @@ namespace MasterMindEngine
         public static IEnumerable<Placement> GetPossibleNextPartialPlacements(Placement placement, Hint hint)
         {
             var placementUnderConstruction = Placement.CreateEmpty(); // start with an empty placement and the full set of hints
-            return GetPossiblePartialNextPlacementsInternal(placement, placementUnderConstruction, hint).Distinct();
+            return GetNextPlacementsRecursion(placement, placementUnderConstruction, hint).Distinct();
         }
 
-        private static IEnumerable<Placement> GetPossiblePartialNextPlacementsInternal(Placement placement, Placement placementUnderConstruction,  Hint hint)
+        private static IEnumerable<Placement> GetNextPlacementsRecursion(Placement plc, Placement plcConstr,  Hint hnt)
         {
-            // generate copies of the hint and placement because we are in recursive calls
-            var placementCopy = placement.Clone();
-            var placementUnderConstructionCopy = placementUnderConstruction.Clone();
-            var hintCopy = hint.Clone();
+            // generate copies of by-reference parameters (this is a recursive function)
+            var placement = plc.Clone();
+            var placementConstructing = plcConstr.Clone();
+            var hint = hnt.Clone();
 
-            if(hintCopy.Hints.Count(h=>h != HintColors.None) == 0)
+            if(hint.Hints.Count(h=>h != HintColors.None) == 0)
             {
-                yield return placementUnderConstructionCopy;
+                yield return placementConstructing; // construction is finished
                 yield break;
             }   
 
                     
-            var hi = Array.FindIndex(hintCopy.Hints, h => h != HintColors.None); // get the first hint that is set               
-            var h = hintCopy.Hints[hi];
-            hintCopy.Hints[hi] = HintColors.None;    // "erase" that entry since it is used here                
+            var hi = Array.FindIndex(hint.Hints, h => h != HintColors.None); // get the first hint that is set               
+            var h = hint.Hints[hi];
+            hint.Hints[hi] = HintColors.None;    // set this hint to none, so that it is not considered in the next recursion
 
             for(int i = 0; i < Placement.Size; ++i)
             {
-                var c = placementCopy.Code[i];
+                var c = placement.Code[i];
                 if(c != CodeColors.None)
                 {
-                    placementCopy.Code[i] = CodeColors.None; // remove the color from the placement
+                    placement.Code[i] = CodeColors.None; // remove the color from the placement, so that it is not considered in the next recursion
 
                     if(h == HintColors.White)
                     {
-                        // place the color c at all other positions than i
+                        // place the color c at all other positions than i in the constructing placement (semantics of white hint)
                         for(int j = 0; j < Placement.Size; ++j)
                         {
                             if(j != i)
                             {
-                                if(placementUnderConstructionCopy.Code[j] == CodeColors.None)
+                                if(placementConstructing.Code[j] == CodeColors.None)
                                 {                                     
-                                    placementUnderConstructionCopy.Code[j] = c;
-                                    foreach(var p in GetPossiblePartialNextPlacementsInternal(placementCopy, placementUnderConstructionCopy, hintCopy))
+                                    placementConstructing.Code[j] = c;
+                                    foreach(var p in GetNextPlacementsRecursion(placement, placementConstructing, hint))
                                     {
                                         yield return p;
                                     }            
                                     // take back last color assignment
-                                    placementUnderConstructionCopy.Code[j] = CodeColors.None;
+                                    placementConstructing.Code[j] = CodeColors.None;
                                 }                                                                                                            
                             }
                         }
@@ -168,20 +152,20 @@ namespace MasterMindEngine
 
                     if(h == HintColors.Black)
                     {
-                        // place the color c at position i
-                        if(placementUnderConstructionCopy.Code[i] == CodeColors.None)
+                        // place the color c exactly at position i in the constructing placement (semantics of black hint)
+                        if(placementConstructing.Code[i] == CodeColors.None)
                         {
-                            placementUnderConstructionCopy.Code[i] = c;
-                            foreach(var p in GetPossiblePartialNextPlacementsInternal(placementCopy, placementUnderConstructionCopy, hintCopy))
+                            placementConstructing.Code[i] = c;
+                            foreach(var p in GetNextPlacementsRecursion(placement, placementConstructing, hint))
                             {
                                 yield return p;
                             }                                        
                             // take back last color assignment
-                            placementUnderConstructionCopy.Code[i] = CodeColors.None;
+                            placementConstructing.Code[i] = CodeColors.None;
                         }                                                                                                            
                     }                                                 
                 }
-                placementCopy.Code[i] = c;
+                placement.Code[i] = c;  // take back color assignment for this recursion level
             }                                                                      
         }
     }
