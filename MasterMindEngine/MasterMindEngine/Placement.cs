@@ -52,10 +52,18 @@ namespace MasterMindEngine
             return true;
         }
 
-        internal bool Fits(Placement p, Hint h)
+        public Placement Clone()
         {
-            throw new NotImplementedException();
+            // cloe the code array to avoid by-reference copying
+            var newCode = new CodeColors[Size];
+            for (int i = 0; i < Size; i++)
+            {
+                newCode[i] = Code[i];
+            }
+            
+            return new Placement(newCode);
         }
+
 
         public CodeColors[] Code { get; private set; } = new CodeColors[Size];
     }

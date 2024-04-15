@@ -11,6 +11,11 @@ namespace MasterMindEngine
     /// </summary>
     public static class Enumerators
     {        
+        /// <summary>
+        /// Enumerate all "normal" placements
+        /// </summary>
+        /// <param name="enumOptions"></param>
+        /// <returns></returns>
         public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptions.ColorOnlyIUsedOnce) 
         {
             var enumValues = ((CodeColors[]) Enum.GetValues(typeof(CodeColors))).Where(c=>c!=CodeColors.None).ToArray(); 
@@ -20,7 +25,7 @@ namespace MasterMindEngine
 
 
         /// <summary>
-        /// Enumerate all placements
+        /// Enumerate all placements with the given colors 
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<Placement> GetPlacements(CodeColors[] enumValues, EnumOptions enumOptions = EnumOptions.ColorOnlyIUsedOnce) 
@@ -87,11 +92,7 @@ namespace MasterMindEngine
             }
         }
         
-        public static IEnumerable<Placement> GetPartialPlacements(Placement other, Hint hint)
-        {
-            // not implemented
-            return Enumerable.Empty<Placement>();
-        }
+
 
         public static IEnumerable<Placement> GetPlacements(Placement other, Hint hint)
         {
@@ -104,6 +105,37 @@ namespace MasterMindEngine
             }
         }
 
+        // enuerate possible future placements that respect a placement and a hint
+
+        /// <summary>
+        /// Enumerates all possible placements that fit the given placement and hint
+        /// 
+        /// </summary>
+        /// <param name="placement"></param>
+        /// <param name="hint"></param>
+        /// <returns></returns>
+        public static IEnumerable<Placement> GetPossiblePartialNextPlacements(Placement placement, Hint hint)
+        {
+            
+            foreach(var h in hint.Hints.Where(h=>h!=HintColors.None))
+            {
+                if(h == HintColors.White)
+                {
+                    for(int i = 0; i < Placement.Size; ++i)
+                    {
+                        var c = placement.Code[i];
+                        if(c != CodeColors.None)
+                        {
+
+                        }
+                    }
+                }                  
+            }
+
+
+            return Enumerable.Empty<Placement>();
+
+        }
 
     }
 }
