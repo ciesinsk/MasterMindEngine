@@ -8,6 +8,22 @@ namespace MasterMindEngine
     {
         public const int Size = 4; 
         
+
+        /// <summary>
+        /// Create an empty placement
+        /// </summary>
+        /// <returns></returns>
+        public static Placement CreateEmpty()
+        {
+            var code = new CodeColors[Size];
+            for (int i = 0; i < Size; i++)
+            {
+                code[i] = CodeColors.None;
+            }   
+
+            return new Placement(code);
+        }
+
         public Placement(CodeColors[] code)
         {
             Code = code;

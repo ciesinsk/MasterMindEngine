@@ -116,26 +116,60 @@ namespace MasterMindEngine
         /// <returns></returns>
         public static IEnumerable<Placement> GetPossiblePartialNextPlacements(Placement placement, Hint hint)
         {
-            
-            foreach(var h in hint.Hints.Where(h=>h!=HintColors.None))
-            {
-                if(h == HintColors.White)
-                {
-                    for(int i = 0; i < Placement.Size; ++i)
-                    {
-                        var c = placement.Code[i];
-                        if(c != CodeColors.None)
-                        {
-
-                        }
-                    }
-                }                  
-            }
-
-
-            return Enumerable.Empty<Placement>();
-
+            var partialPlacement = Placement.CreateEmpty();
+            return GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hint);
         }
 
+        private static IEnumerable<Placement> GetPossiblePartialNextPlacementsInternal(Placement placement, Placement partialPlacement,  Hint hint)
+        {
+            var hintCopy = hint.Clone();
+
+            while(hintCopy.Hints.Count(h=>h != HintColors.None) > 0)
+            {            
+                var k = Array.FindIndex(hintCopy.Hints, h => h != HintColors.None); // get the first hint that is not None                
+                var h = hintCopy.Hints[k];
+                hintCopy.Hints[k] = HintColors.None;    // "erase" that entry since it is used here                
+
+                for(int i = 0; i < Placement.Size; ++i)
+                {
+                    var c = placement.Code[i];
+                    if(c != CodeColors.None)
+                    {
+                        if(h == HintColors.White)
+                        {
+                            // place the color c at all other positions than i
+                            for(int j = 0; j < Placement.Size; ++j)
+                            {
+                                if(j != i)
+                                {
+                                    if(partialPlacement.Code[j] == CodeColors.None)
+                                    {                                     
+                                        partialPlacement.Code[j] = c;
+                                        foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hintCopy))
+                                        {
+                                            yield return p;
+                                        }                                        
+                                    }                                                                                                            
+                                }
+                            }
+                        }
+
+                        if(h == HintColors.Black)
+                        {
+                            // place the color c at position i
+                            if(partialPlacement.Code[i] == CodeColors.None)
+                            {
+                                partialPlacement.Code[i] = c;
+                                foreach(var p in GetPossiblePartialNextPlacementsInternal(placement, partialPlacement, hintCopy))
+                                {
+                                    yield return p;
+                                }                                        
+                            }                                                                                                            
+                        }   
+                    }
+                }                             
+            }
+            yield break;
+        }
     }
 }
