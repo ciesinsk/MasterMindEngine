@@ -149,5 +149,31 @@ namespace MasterMindEngine
                 return hash;
             }
         }
+
+        public static Placement? Parse(string? v)
+        {
+            if(v == null)
+            {
+                throw new ArgumentException("Invalid input line");;
+            }
+
+            var p = new Placement(new CodeColors[Size]);
+
+            var colors = v.Split(',').Select(s=>Enum.Parse(typeof(CodeColors), s)).OfType<CodeColors>().ToArray();
+
+            if(colors.Length != Size)
+            {
+                throw new ArgumentException("The placement should have exactly 4 colors");
+            }
+
+            if(colors.Any(c=>c == CodeColors.None))
+            {
+                throw new ArgumentException("Invalid color 'None'");
+            }
+
+            p.Code = colors;
+
+            return p;
+        }
     }
 }

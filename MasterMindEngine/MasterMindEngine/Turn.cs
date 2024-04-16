@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Drawing;
+using System.Text;
 
 namespace MasterMindEngine
 {
@@ -6,11 +7,15 @@ namespace MasterMindEngine
     {
         public Placement Placement { get; private set; }
 
-        public Hint Hint { get; private set; }
+        public Hint Hint { get; set; } = new Hint(new HintColors[Placement.Size]);
 
         public int TurnNumber { get; private set; }
 
-        public Turn() { }
+        public Turn(Placement p, int turnNumber) 
+        {
+            Placement = p;
+            TurnNumber = turnNumber;
+        }
 
         public override string ToString()
         {
