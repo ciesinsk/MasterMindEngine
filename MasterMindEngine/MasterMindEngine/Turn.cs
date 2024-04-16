@@ -20,9 +20,9 @@ namespace MasterMindEngine
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Turn: {TurnNumber}");
-            sb.AppendLine(Placement.ToString());
-            sb.AppendLine(Hint.ToString());
+            sb.Append($"Turn: {TurnNumber}: ");
+            sb.Append($"{Placement.ToString()} - ");
+            sb.AppendLine($"{Hint.ToString()}");
             return sb.ToString();
         }
     }

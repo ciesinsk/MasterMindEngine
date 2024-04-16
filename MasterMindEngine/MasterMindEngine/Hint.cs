@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace MasterMindEngine
 {
@@ -37,6 +32,27 @@ namespace MasterMindEngine
             }            
 
             return sb.ToString();
+        }
+
+        internal static Hint? Parse(string? v)
+        {
+            if(v == null)
+            {
+                throw new ArgumentException("Invalid input line");;
+            }
+
+            var p = new Hint(new HintColors[Placement.Size]);
+
+            var colors = v.Split(',').Select(s=>Enum.Parse(typeof(HintColors), s)).OfType<HintColors>().ToArray();
+
+            if(colors.Length != Placement.Size)
+            {
+                throw new ArgumentException("The placement should have exactly 4 Hints");
+            }
+
+            p.Hints = colors;
+
+            return p;
         }
     }
 }

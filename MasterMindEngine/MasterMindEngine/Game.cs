@@ -31,34 +31,31 @@ namespace MasterMindEngine
 
             while (GameIsRunning)
             {
-                this.ToString();
-
-                var guess = GetPlacementFromUser("Please enter your guess:");                
-                
-                var turn = new Turn(guess, Turns.Count +1);
+                var placement = CalculateNextPlacement();
+                var turn = new Turn(placement, Turns.Count + 1);
                 Turns.Add(turn);                
-            }
 
-            //for (int i = 0; i < MaxTurns; i++)
-            //{
-            //    var turn = new Turn();
+                Console.Clear();
+                Console.WriteLine(ToString());
 
+                if(placement == SecretCode)
+                {
+                    Console.WriteLine("I win!");
+                    break;
+                }                
+                var hint = GetHintFomUser("Please enter your hint:");
+            }            
+        }
 
+        private Placement CalculateNextPlacement()
+        {
+            var p = new Placement(new CodeColors[Placement.Size]);
+            p.Code[0] = CodeColors.Red;
+            p.Code[1] = CodeColors.Green;
+            p.Code[2] = CodeColors.Blue;
+            p.Code[3] = CodeColors.Yellow;
 
-            //    turn.Play();
-            //    Turns.Add(turn);
-
-            //    if (turn.IsCorrect)
-            //    {
-            //        Console.WriteLine("You win!");
-            //        break;
-            //    }
-            //}
-
-            //if (!Turns.Last().IsCorrect)
-            //{
-            //    Console.WriteLine("You lose!");
-            //}
+            return p;
         }
 
         private static Placement GetPlacementFromUser(string prompt)
@@ -83,6 +80,30 @@ namespace MasterMindEngine
             }
 
             return p;
+        }
+
+        private static Hint GetHintFomUser(string prompt)
+        {
+            if(String.IsNullOrEmpty(prompt) == false)
+            {
+                Console.WriteLine(prompt);
+            }
+
+            Hint? h = null;
+
+            while (h == null)
+            {
+                try
+                {
+                    h = Hint.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return h;
         }
 
         private static void PrintGameIntroduction()
