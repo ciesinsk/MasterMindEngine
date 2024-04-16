@@ -10,14 +10,18 @@ namespace MasterMindEngine
     {
         public const int MaxTurns = 10;
 
-        public List<Placement> Turns = new List<Placement>();
+        public List<Turn> Turns = new List<Turn>();
+
+
 
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-
-            sb.AppendLine($"Turn: {Turns.Count}");
+            foreach (var t in Turns)
+            {
+                sb.AppendLine(t.ToString());
+            }
 
             return sb.ToString();
         }
