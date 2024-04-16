@@ -121,5 +121,31 @@ namespace MasterMindEngineTests
 
             Assert.AreEqual(2, placements3.Count);
         }
+
+
+        
+        [TestMethod]
+        public void TestCompletionOfPartialEnumeration()
+        {
+            var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Yellow, CodeColors.Green, CodeColors.Blue });
+
+            var nextMoves = new List<Placement>();
+            var nextPartialMoves = Enumerators.GetPossibleNextPartialPlacements(p1, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None }));
+
+            foreach(var p in nextPartialMoves)
+            {
+                var completePlacements = Enumerators.GetPlacements(p);
+                nextMoves.AddRange(completePlacements);
+            }   
+
+            nextMoves = nextMoves.Distinct().ToList();
+
+            Assert.AreEqual(14, nextMoves.Count);
+
+
+            nextMoves = Enumerators.GetPossibleNextPlacements(p1, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None })).ToList();
+
+            Assert.AreEqual(14, nextMoves.Count);
+        }
     }
 }

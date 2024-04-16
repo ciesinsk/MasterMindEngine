@@ -91,6 +91,23 @@ namespace MasterMindEngine
             }
         }               
 
+
+
+        public static IEnumerable<Placement> GetPossibleNextPlacements(Placement placement, Hint hint)
+        {
+            var placements = new List<Placement>(); 
+            var partialPlacements = GetPossibleNextPartialPlacements(placement, hint);
+            
+            foreach(var partialPlacement in partialPlacements)
+            {
+                var p = GetPlacements(partialPlacement).ToList();
+
+                placements.AddRange(p);
+            }   
+
+            return placements.Distinct();
+        }
+
         /// <summary>
         /// Enumerates all possible placements that fit the given placement and hint
         /// 

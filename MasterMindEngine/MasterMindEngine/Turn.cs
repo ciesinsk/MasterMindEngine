@@ -22,7 +22,7 @@ namespace MasterMindEngine
             var sb = new StringBuilder();
             sb.Append($"Turn: {TurnNumber}: ");
             sb.Append($"{Placement.ToString()} - ");
-            sb.AppendLine($"{Hint.ToString()}");
+            sb.Append($"{Hint.ToString()}");
             return sb.ToString();
         }
     }
