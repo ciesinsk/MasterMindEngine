@@ -21,7 +21,6 @@ namespace MasterMindEngine
         public void Play()
         {
             PrintGameIntroduction();
-
             
             var secretCode = GetPlacementFromUser("Please enter your secret code:");
 
@@ -32,7 +31,7 @@ namespace MasterMindEngine
 
             while (GameIsRunning)
             {
-                var candidates = CalculateCandidatePlacements();
+                var candidates = CalculateCandidatePlacements(GameConfig.CodeOptions);
 
                 if(candidates.Count() == 0)
                 {
@@ -75,11 +74,11 @@ namespace MasterMindEngine
             return placementList[index];
         }
 
-        private IEnumerable<Placement> CalculateCandidatePlacements()
+        private IEnumerable<Placement> CalculateCandidatePlacements(EnumOptions enumOptions)
         {
             if(Turns.Count == 0)
             {
-                var placements = Enumerators.GetPlacements().ToList();
+                var placements = Enumerators.GetPlacements(enumOptions).ToList();
 
                 return placements;
             }
@@ -119,8 +118,14 @@ namespace MasterMindEngine
                 {
                     Console.WriteLine(ex.Message);
                 }
-            }
 
+                if(p.isValid(GameConfig.CodeOptions) == false)
+                {
+                    Console.WriteLine("The placement is invalid. Please try again.");
+                    p = null;
+                }
+            }
+            
             return p;
         }
 
@@ -159,7 +164,14 @@ namespace MasterMindEngine
                 Console.WriteLine(color);
             }
 
-            Console.WriteLine("You can use each color only once.");
+            if (GameConfig.CodeOptions.HasFlag(EnumOptions.ColorOnlyUsedOnce))
+            {
+                Console.WriteLine("You can use each color only once.");
+            }
+            else
+            {
+                Console.WriteLine("You can use each color multiple times.");
+            }            
         }
 
         public override string ToString()

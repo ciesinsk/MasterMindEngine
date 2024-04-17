@@ -18,14 +18,12 @@ namespace MasterMindEngine
         /// </summary>
         /// <param name="enumOptions"></param>
         /// <returns></returns>
-        public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptions.ColorOnlyUsedOnce)
+        public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptionsDefault)
         {
             var enumValues = GetColorValues();
 
             return GetPlacements(enumValues, enumOptions);
         }
-
-
 
         /// <summary>
         /// Enumerate all placements with the given colors 
@@ -84,9 +82,9 @@ namespace MasterMindEngine
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public static IEnumerable<Placement> GetPlacements(Placement other)
+        public static IEnumerable<Placement> GetPlacements(Placement other, EnumOptions enumOptions = EnumOptionsDefault)
         {
-            foreach (var p in GetPlacements())
+            foreach (var p in GetPlacements(enumOptions))
             {
                 if (p.Fits(other))
                 {
@@ -97,14 +95,14 @@ namespace MasterMindEngine
 
 
 
-        public static IEnumerable<Placement> GetPossibleNextPlacements(Placement placement, Hint hint)
+        public static IEnumerable<Placement> GetPossibleNextPlacements(Placement placement, Hint hint, EnumOptions enumOptions = EnumOptionsDefault)
         {
             var placements = new List<Placement>(); 
             var partialPlacements = GetPossibleNextPartialPlacements(placement, hint);
             
             foreach(var partialPlacement in partialPlacements)
             {
-                var p = GetPlacements(partialPlacement).ToList();
+                var p = GetPlacements(partialPlacement, enumOptions).ToList();
 
                 placements.AddRange(p);
             }   

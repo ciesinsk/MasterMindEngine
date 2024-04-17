@@ -9,6 +9,8 @@ namespace MasterMindEngineTests
         [TestMethod]
         public void TestEnumerationOfAllPlacements()
         {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
             var p = Enumerators.GetPlacements().ToList();
             Assert.AreEqual(24, p.Count);
             p = p.Distinct().ToList();
@@ -33,8 +35,38 @@ namespace MasterMindEngineTests
         }
 
         [TestMethod]
+        public void TestEnumerationOfAllPlacements2()
+        {
+            GameConfig.SetConfigToDefault();
+
+            var p = Enumerators.GetPlacements().ToList();
+            Assert.AreEqual(360, p.Count);
+            p = p.Distinct().ToList();
+            Assert.AreEqual(360, p.Count);
+            
+            var p2 = Enumerators.GetPlacements(EnumOptions.NoRestrictions).ToList();
+            Assert.AreEqual(1296, p2.Count); 
+            p2 = p2.Distinct().ToList();
+            Assert.AreEqual(1296, p2.Count);
+
+                                            // 
+            var p3 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed).ToList();
+            Assert.AreEqual(2401, p3.Count); // 4^4 = 256 + none allowe
+            p3 = p3.Distinct().ToList();
+            Assert.AreEqual(2401, p3.Count);
+
+
+            var p4 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed|EnumOptions.ColorOnlyUsedOnce).ToList();
+            Assert.AreEqual(1045, p4.Count); // 4^4 = 256 + none allowe
+            p4 = p4.Distinct().ToList();
+            Assert.AreEqual(1045, p4.Count);
+        }
+
+        [TestMethod]
         public void TestEnumerationOfPossibleMatching()
         {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
             var p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
             var h = new Hint( new HintColors[] { HintColors.White, HintColors.White, HintColors.Black, HintColors.None});
 
@@ -64,6 +96,43 @@ namespace MasterMindEngineTests
             Assert.AreEqual(1, placements.Count());
         }
 
+
+        [TestMethod]
+        public void TestEnumerationOfPossibleMatching2()
+        {
+            GameConfig.SetConfigToDefault();
+
+            var p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            var h = new Hint( new HintColors[] { HintColors.White, HintColors.White, HintColors.Black, HintColors.None});
+
+            var placements = Enumerators.GetPossibleNextPartialPlacements(p, h);            
+
+            Assert.AreEqual(36, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.Black, HintColors.None, HintColors.None, HintColors.None});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);            
+
+            Assert.AreEqual(4, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.White, HintColors.None, HintColors.None, HintColors.None});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);       
+            
+            Assert.AreEqual(12, placements.Count());
+
+            p = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green });
+            h = new Hint( new HintColors[] { HintColors.Black, HintColors.Black, HintColors.Black, HintColors.Black});
+
+            placements = Enumerators.GetPossibleNextPartialPlacements(p, h);       
+            
+            Assert.AreEqual(1, placements.Count());
+        }
+
+
+
         [TestMethod]
         public void TestIEquality()
         {
@@ -85,6 +154,8 @@ namespace MasterMindEngineTests
         [TestMethod]
         public void TestEnumerationOfMatchingPlacements()
         {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
             var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });
 
             var p = Enumerators.GetPlacements(p1).ToList();
@@ -108,6 +179,8 @@ namespace MasterMindEngineTests
         [TestMethod]
         public void TestIntersectOfTwoPlacementEnumerations()
         {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
             var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.None, CodeColors.None, CodeColors.None });
 
             var placements1 = Enumerators.GetPlacements(p1).ToList();
@@ -128,6 +201,8 @@ namespace MasterMindEngineTests
         [TestMethod]
         public void TestCompletionOfPartialEnumeration()
         {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
             var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Yellow, CodeColors.Green, CodeColors.Blue });
 
             var nextMoves = new List<Placement>();

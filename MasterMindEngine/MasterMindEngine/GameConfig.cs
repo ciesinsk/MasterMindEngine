@@ -11,22 +11,25 @@ namespace MasterMindEngine
         public const int MaxTurnsDefault = 10;
         public const int ColorCountDefault = 6;
         public const int CodeLengthDefault = 4;
+        public const EnumOptions EnumOptionsDefault = EnumOptions.ColorOnlyUsedOnce;
 
         public static int MaxTurns {get;private set; } = MaxTurnsDefault;        
         public static int ColorCount {get;private set; } = ColorCountDefault;
         public static int CodeLength {get;private set; } = CodeLengthDefault; 
 
+        public static EnumOptions CodeOptions { get; set; } = EnumOptions.ColorOnlyUsedOnce;
 
-        public static void SetConfig(int maxTurns, int colorCount, int codeLength)
+        public static void SetConfig(int maxTurns, int colorCount, int codeLength, EnumOptions enumOptions)
         {
             MaxTurns = maxTurns;
             ColorCount = colorCount;
             CodeLength = codeLength;
+            CodeOptions = enumOptions;
         }
 
         public static void SetConfigToDefault()
         {
-            SetConfig(MaxTurnsDefault, ColorCountDefault, CodeLengthDefault);
+            SetConfig(MaxTurnsDefault, ColorCountDefault, CodeLengthDefault, EnumOptionsDefault);
         }
 
         // The colors are: Red, Green, Blue, Yellow, Orange, Purple, Pink, Brown
