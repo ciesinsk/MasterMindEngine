@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
+    /// <summary>
+    /// Class that contains the game logic for one game of MasterMind
+    /// </summary>
     public class Game
     {
-        public List<Turn> Turns = new List<Turn>();
+        private List<Turn> Turns = new List<Turn>();
 
         private Placement SecretCode { get; set; } = new Placement(new CodeColors[CodeLength]);
 
@@ -20,12 +18,9 @@ namespace MasterMindEngine
         {
             PrintGameIntroduction();
             
-            var secretCode = GetPlacementFromUser("Please enter your secret code:");
-
-            SecretCode = secretCode;
+            SecretCode = GetPlacementFromUser("Please enter your secret code:");            
 
             Console.WriteLine("The secret code is set. Let's start the game!");
-
 
             while (GameIsRunning)
             {
@@ -36,17 +31,15 @@ namespace MasterMindEngine
                     Console.WriteLine("I have no candidates to chose from. You must have made a mistake in your hints.");
                     break;
                 }
-                else
-                {
-                    Console.WriteLine($"I have {candidates.Count()} candidates to chose from.");
-                }
+
+                Console.WriteLine($"I have {candidates.Count()} candidates to chose from.");
 
                 var placement = ChoseNextPlacement(candidates);
-
+                
                 var turn = new Turn(placement, Turns.Count + 1);
                 Turns.Add(turn);                
                 
-                Console.WriteLine(ToString());
+                Console.WriteLine(ToString()); // print current state of the game
 
                 if(placement.Equals(SecretCode))
                 {
@@ -61,6 +54,8 @@ namespace MasterMindEngine
                         break;
                     }
                 }                
+
+                // query the hint from the user
                 var hint = GetHintFomUser("Please enter your hint:");
                 turn.Hint = hint;
             }            

@@ -44,14 +44,19 @@ namespace MasterMindEngine
 
             var p = new Hint(new HintColors[CodeLength]);
 
-            var colors = v.Split(',').Select(s=>Enum.Parse(typeof(HintColors), s)).OfType<HintColors>().ToArray();
+            var colors = v.Split(',').Select(s=>Enum.Parse(typeof(HintColors), s)).OfType<HintColors>().ToArray();            
 
-            if(colors.Length != CodeLength)
+            if(colors.Length > CodeLength)
             {
-                throw new ArgumentException("The placement should have exactly 4 Hints");
-            }
+                throw new ArgumentException("Too many hints in the input line");
+            }   
 
-            p.Hints = colors;
+            p.Hints = Enumerable.Repeat(HintColors.None, CodeLength).ToArray();
+
+            for (int i = 0; i < colors.Length; i++)
+            {
+                p.Hints[i] = colors[i];
+            }
 
             return p;
         }
