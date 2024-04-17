@@ -51,6 +51,12 @@ namespace MasterMindEngine
                 }    
             }
 
+            var avalableColors = GetColorValues();
+            if(Code.Any(c=>avalableColors.Contains(c) == false))
+            {
+                return false;
+            }
+
             return true;
         }
 
