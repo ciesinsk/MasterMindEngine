@@ -6,7 +6,7 @@
         {
             Game game = new Game();
 
-            GameConfig.SetConfig(10, 6, 4, GameConfig.EnumOptions.NoRestrictions);
+            GameConfig.SetConfig(10, 4, 4, GameConfig.EnumOptions.NoRestrictions);
             game.Play();
 
         }

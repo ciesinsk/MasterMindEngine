@@ -10,8 +10,6 @@ namespace MasterMindEngine
 {
     public class Game
     {
-        public const int MaxTurns = 10;
-
         public List<Turn> Turns = new List<Turn>();
 
         private Placement SecretCode { get; set; } = new Placement(new CodeColors[CodeLength]);
@@ -54,6 +52,14 @@ namespace MasterMindEngine
                 {
                     Console.WriteLine("I win!");
                     break;
+                }
+                else
+                {
+                    if(Turns.Count >= MaxTurns)
+                    {
+                        Console.WriteLine("I lost!");
+                        break;
+                    }
                 }                
                 var hint = GetHintFomUser("Please enter your hint:");
                 turn.Hint = hint;
@@ -86,11 +92,11 @@ namespace MasterMindEngine
 
             var firstTurn = Turns.First();
 
-            var relatedNextMoves =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint);
+            var relatedNextMoves =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint, enumOptions);
 
             foreach (var turn in Turns.Skip(1))
             {
-                relatedNextMoves = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint).Intersect(relatedNextMoves);                
+                relatedNextMoves = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions).Intersect(relatedNextMoves);                
             }          
 
             // it can happen the the next move is one of the moves already made - so remove them
