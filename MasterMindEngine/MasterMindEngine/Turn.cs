@@ -20,7 +20,7 @@ namespace MasterMindEngine
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"Turn {TurnNumber}: ");
+            sb.Append($"Turn {TurnNumber}     : ");
             sb.Append($"{Placement.ToString()} - ");
             sb.Append($"{Hint.ToString()}");
             return sb.ToString();
