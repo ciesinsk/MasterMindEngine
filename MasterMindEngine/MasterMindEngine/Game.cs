@@ -34,7 +34,15 @@ namespace MasterMindEngine
             {
                 var candidates = CalculateCandidatePlacements();
 
-                Console.WriteLine($"I have {candidates.Count()} candidates to chose from.");
+                if(candidates.Count() == 0)
+                {
+                    Console.WriteLine("I have no candidates to chose from. You must have made a mistake in your hints.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine($"I have {candidates.Count()} candidates to chose from.");
+                }
 
                 var placement = ChoseNextPlacement(candidates);
 
@@ -85,6 +93,9 @@ namespace MasterMindEngine
             {
                 relatedNextMoves = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint).Intersect(relatedNextMoves);                
             }          
+
+            // it can happen the the next move is one of the moves already made - so remove them
+            relatedNextMoves = relatedNextMoves.Except(Turns.Select(t => t.Placement));
 
             return relatedNextMoves;
         }
