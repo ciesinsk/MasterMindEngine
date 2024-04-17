@@ -120,7 +120,7 @@ namespace MasterMindEngine
                     Console.WriteLine(ex.Message);
                 }
 
-                if(p.isValid(GameConfig.CodeOptions) == false)
+                if(p?.isValid(GameConfig.CodeOptions) == false)
                 {
                     Console.WriteLine("The placement is invalid. Please try again.");
                     p = null;
@@ -157,7 +157,7 @@ namespace MasterMindEngine
         private static void PrintGameIntroduction()
         {
             Console.WriteLine("Welcome to MasterMind! Try to guess the secret code in 10 turns or less.");
-            Console.WriteLine("The code is a 4 digit color code.");
+            Console.WriteLine($"The code is a {GameConfig.ColorCount} digit color code.");
             Console.WriteLine("The colors are:");
 
             foreach (var color in GetColorValues())

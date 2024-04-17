@@ -170,7 +170,7 @@ namespace MasterMindEngine
 
             if(colors.Length != CodeLength)
             {
-                throw new ArgumentException("The placement should have exactly 4 colors");
+                throw new ArgumentException($"The placement should have exactly length {GameConfig.CodeLength}");
             }
 
             if(colors.Any(c=>c == CodeColors.None))

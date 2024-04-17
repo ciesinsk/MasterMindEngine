@@ -34,7 +34,7 @@ namespace MasterMindEngine
 
         // The colors are: Red, Green, Blue, Yellow, Orange, Purple, Pink, Brown
 
-        public enum CodeColors { None, Yellow, Blue, Red, Green, Orange, Purple, Pink, Brown};
+        public enum CodeColors { None, Yellow, Blue, Red, Green, Orange, Purple, Pink, Brown, White, Black, Beige};
 
         public enum HintColors { None, White, Black};
 
