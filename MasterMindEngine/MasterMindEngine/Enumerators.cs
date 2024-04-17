@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static MasterMindEngine.GameConfig;
+
 namespace MasterMindEngine
 {
     /// <summary>
@@ -16,18 +18,20 @@ namespace MasterMindEngine
         /// </summary>
         /// <param name="enumOptions"></param>
         /// <returns></returns>
-        public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptions.ColorOnlyIUsedOnce) 
+        public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptions.ColorOnlyUsedOnce)
         {
-            var enumValues = ((CodeColors[]) Enum.GetValues(typeof(CodeColors))).Where(c=>c!=CodeColors.None).ToArray(); 
+            var enumValues = GetColorValues();
 
             return GetPlacements(enumValues, enumOptions);
         }
+
+
 
         /// <summary>
         /// Enumerate all placements with the given colors 
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Placement> GetPlacements(CodeColors[] enumValues, EnumOptions enumOptions = EnumOptions.ColorOnlyIUsedOnce) 
+        public static IEnumerable<Placement> GetPlacements(CodeColors[] enumValues, EnumOptions enumOptions = EnumOptions.ColorOnlyUsedOnce) 
         {
             if(enumOptions.HasFlag(EnumOptions.NoneIsAllowed))
             {
@@ -45,12 +49,12 @@ namespace MasterMindEngine
 
             var colorCount = enumValues.Length;
 
-            var indexes = new int[Placement.Size];
+            var indexes = new int[CodeLength];
 
             while (indexes[0] < colorCount)
             {
-                var code = new CodeColors[Placement.Size];
-                for (int i = 0; i < Placement.Size; i++)
+                var code = new CodeColors[CodeLength];
+                for (int i = 0; i < CodeLength; i++)
                 {
                     code[i] = enumValues[indexes[i]];
                 }
@@ -62,8 +66,8 @@ namespace MasterMindEngine
                     yield return p;
                 }
                 
-                indexes[Placement.Size - 1]++;
-                for (int i = Placement.Size - 1; i > 0; i--)
+                indexes[CodeLength - 1]++;
+                for (int i = CodeLength - 1; i > 0; i--)
                 {
                     if (indexes[i] == colorCount)
                     {
@@ -139,7 +143,7 @@ namespace MasterMindEngine
             var h = hint.Hints[hi];
             hint.Hints[hi] = HintColors.None;    // set this hint to none, so that it is not considered in the next recursion
 
-            for(int i = 0; i < Placement.Size; ++i)
+            for(int i = 0; i < CodeLength; ++i)
             {
                 var c = placement.Code[i];
                 if(c != CodeColors.None)
@@ -149,7 +153,7 @@ namespace MasterMindEngine
                     if(h == HintColors.White)
                     {
                         // place the color c at all other positions than i in the constructing placement (semantics of white hint)
-                        for(int j = 0; j < Placement.Size; ++j)
+                        for(int j = 0; j < CodeLength; ++j)
                         {
                             if(j != i)
                             {

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
@@ -13,7 +14,7 @@ namespace MasterMindEngine
 
         public List<Turn> Turns = new List<Turn>();
 
-        private Placement SecretCode { get; set; } = new Placement(new CodeColors[Placement.Size]);
+        private Placement SecretCode { get; set; } = new Placement(new CodeColors[CodeLength]);
 
         private bool GameIsRunning { get; set; } = true;
 
@@ -141,12 +142,10 @@ namespace MasterMindEngine
             Console.WriteLine("Welcome to MasterMind! Try to guess the secret code in 10 turns or less.");
             Console.WriteLine("The code is a 4 digit color code.");
             Console.WriteLine("The colors are:");
-            foreach (var color in (CodeColors[])Enum.GetValues(typeof(CodeColors)))
+
+            foreach (var color in GetColorValues())
             {
-                if (color != CodeColors.None)
-                {
-                    Console.WriteLine(color);
-                }
+                Console.WriteLine(color);
             }
 
             Console.WriteLine("You can use each color only once.");
@@ -155,9 +154,9 @@ namespace MasterMindEngine
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("Secret code:");
+            sb.Append("Secret code: ");
             sb.AppendLine(SecretCode.ToString());
-            sb.AppendLine("Game turns:");
+            sb.AppendLine("Game turns: ");
             foreach (var t in Turns)
             {
                 sb.AppendLine(t.ToString());

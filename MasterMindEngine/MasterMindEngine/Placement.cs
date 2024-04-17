@@ -1,5 +1,6 @@
 ﻿
 using System.Text;
+using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
@@ -8,7 +9,7 @@ namespace MasterMindEngine
     /// </summary>
     public class Placement: IEquatable<Placement>
     {
-        public const int Size = 4; 
+        
         
 
         /// <summary>
@@ -17,8 +18,8 @@ namespace MasterMindEngine
         /// <returns></returns>
         public static Placement CreateEmpty()
         {
-            var code = new CodeColors[Size];
-            for (int i = 0; i < Size; i++)
+            var code = new CodeColors[CodeLength];
+            for (int i = 0; i < CodeLength; i++)
             {
                 code[i] = CodeColors.None;
             }   
@@ -42,7 +43,7 @@ namespace MasterMindEngine
                 return false;
             }   
 
-            if(enumOptions.HasFlag(EnumOptions.ColorOnlyIUsedOnce))
+            if(enumOptions.HasFlag(EnumOptions.ColorOnlyUsedOnce))
             {
                 if(Code.Where(c=>c != CodeColors.None).Distinct().Count() != Code.Where(c=>c != CodeColors.None).Count())
                 {
@@ -60,7 +61,7 @@ namespace MasterMindEngine
         /// <returns>True if the placement fits the other placement</returns>
         public bool Fits(Placement other)
         {            
-            for (int i = 0; i < Placement.Size; i++)
+            for (int i = 0; i < CodeLength; i++)
             {
                 if(other.Code[i] != CodeColors.None && other.Code[i] != Code[i])
                 {
@@ -77,8 +78,8 @@ namespace MasterMindEngine
         public Placement Clone()
         {
             // cloe the code array to avoid by-reference copying
-            var newCode = new CodeColors[Size];
-            for (int i = 0; i < Size; i++)
+            var newCode = new CodeColors[CodeLength];
+            for (int i = 0; i < CodeLength; i++)
             {
                 newCode[i] = Code[i];
             }
@@ -89,7 +90,7 @@ namespace MasterMindEngine
         /// <summary>
         /// The actual placement of the colors, in the original game called "Code"
         /// </summary>
-        public CodeColors[] Code { get; private set; } = new CodeColors[Size];
+        public CodeColors[] Code { get; private set; } = new CodeColors[CodeLength];
 
         /// <summary>
         /// Standard override of the ToString method
@@ -115,7 +116,7 @@ namespace MasterMindEngine
                 return false;
             }   
 
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < CodeLength; i++)
             {
                 if(other.Code[i] != Code[i])
                 {
@@ -157,11 +158,11 @@ namespace MasterMindEngine
                 throw new ArgumentException("Invalid input line");;
             }
 
-            var p = new Placement(new CodeColors[Size]);
+            var p = new Placement(new CodeColors[CodeLength]);
 
             var colors = v.Split(',').Select(s=>Enum.Parse(typeof(CodeColors), s)).OfType<CodeColors>().ToArray();
 
-            if(colors.Length != Size)
+            if(colors.Length != CodeLength)
             {
                 throw new ArgumentException("The placement should have exactly 4 colors");
             }

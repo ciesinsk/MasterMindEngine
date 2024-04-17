@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
@@ -6,8 +7,8 @@ namespace MasterMindEngine
     {                
         public Hint Clone()
         {
-            var newHints = new HintColors[Placement.Size];
-            for (int i = 0; i < Placement.Size; i++)
+            var newHints = new HintColors[CodeLength];
+            for (int i = 0; i < CodeLength; i++)
             {
                 newHints[i] = Hints[i];
             }
@@ -21,7 +22,7 @@ namespace MasterMindEngine
             Hints = hints;
         }
 
-        public HintColors[] Hints { get; private set; } = new HintColors[Placement.Size];
+        public HintColors[] Hints { get; private set; } = new HintColors[CodeLength];
 
         public override string ToString()
         {
@@ -41,11 +42,11 @@ namespace MasterMindEngine
                 throw new ArgumentException("Invalid input line");;
             }
 
-            var p = new Hint(new HintColors[Placement.Size]);
+            var p = new Hint(new HintColors[CodeLength]);
 
             var colors = v.Split(',').Select(s=>Enum.Parse(typeof(HintColors), s)).OfType<HintColors>().ToArray();
 
-            if(colors.Length != Placement.Size)
+            if(colors.Length != CodeLength)
             {
                 throw new ArgumentException("The placement should have exactly 4 Hints");
             }

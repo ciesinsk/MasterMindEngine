@@ -1,4 +1,5 @@
 using MasterMindEngine;
+using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngineTests
 {
@@ -25,7 +26,7 @@ namespace MasterMindEngineTests
             Assert.AreEqual(625, p3.Count);
 
 
-            var p4 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed|EnumOptions.ColorOnlyIUsedOnce).ToList();
+            var p4 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed|EnumOptions.ColorOnlyUsedOnce).ToList();
             Assert.AreEqual(209, p4.Count); // 4^4 = 256 + none allowe
             p4 = p4.Distinct().ToList();
             Assert.AreEqual(209, p4.Count);
