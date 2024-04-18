@@ -32,6 +32,12 @@ namespace MasterMindEngine
                     break;
                 }
 
+                if(candidates.Contains(SecretCode) == false)
+                {
+                    Console.WriteLine("Something went wrong.");
+                    break;
+                }
+
                 Console.WriteLine($"I have {candidates.Count()} candidates to chose from.");
 
                 var placement = ChoseNextPlacement(candidates);
@@ -51,10 +57,21 @@ namespace MasterMindEngine
                     if(Turns.Count >= MaxTurns)
                     {
                         Console.WriteLine("I lost!");
+                        Console.WriteLine($"The secret code was: {SecretCode}");
+                        Console.Write($"Do you want to see all remaining codes? [y/n]");
+                        var answer = Console.ReadLine();
+                        if(answer.ToLower() == "y")
+                        {
+                            foreach (var c in candidates)
+                            {
+                                Console.WriteLine(c);
+                            }
+                        }   
                         break;
                     }
-                }                
-
+                }            
+                
+                
                 // query the hint from the user
                 var hint = GetHintFomUser("Please enter your hint:");
                 turn.Hint = hint;
@@ -157,7 +174,7 @@ namespace MasterMindEngine
         private static void PrintGameIntroduction()
         {
             Console.WriteLine("Welcome to MasterMind! Try to guess the secret code in 10 turns or less.");
-            Console.WriteLine($"The code is a {GameConfig.ColorCount} digit color code.");
+            Console.WriteLine($"The code is a {GameConfig.CodeLength} digit color code.");
             Console.WriteLine("The colors are:");
 
             foreach (var color in GetColorValues())
