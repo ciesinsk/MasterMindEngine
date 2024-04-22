@@ -104,17 +104,34 @@ namespace MasterMindEngine
 
             var firstTurn = Turns.First();
 
-            var relatedNextMoves =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint, enumOptions);
+            var candidatePlacements =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint, enumOptions);
 
             foreach (var turn in Turns.Skip(1))
             {
-                relatedNextMoves = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions).Intersect(relatedNextMoves);                
+                candidatePlacements = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions).Intersect(candidatePlacements);                
             }          
 
-            // it can happen the the next move is one of the moves already made - so remove them
-            relatedNextMoves = relatedNextMoves.Except(Turns.Select(t => t.Placement));
+            // it can happen that the next move is one of the moves already made - so remove them
+            candidatePlacements = candidatePlacements.Except(Turns.Select(t => t.Placement));
 
-            return relatedNextMoves;
+            // generate and apply additional knowledge
+            candidatePlacements = ApplyAdditionalKnowledge(candidatePlacements);
+
+            return candidatePlacements;
+        }
+
+        private IEnumerable<Placement> ApplyAdditionalKnowledge(IEnumerable<Placement> candidatePlacements)
+        {
+            var forbiddenPlacements = GenerateForbiddenPlacements();
+
+            // remove forbidden placements from list of candidate placemments
+
+            return candidatePlacements;
+        }
+
+        private IEnumerable<Placement> GenerateForbiddenPlacements()
+        {
+            return new List<Placement>();
         }
 
         private static Placement GetPlacementFromUser(string prompt)
