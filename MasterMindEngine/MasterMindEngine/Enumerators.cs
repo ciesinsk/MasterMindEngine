@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Threading.Tasks.Sources;
 using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
@@ -188,6 +188,10 @@ namespace MasterMindEngine
 
         public static IEnumerable<Placement> GenerateMandatoryPlacements(IEnumerable<Turn> turns)
         {
+            var turnsWithBlackOnlyHints = turns.Where(t => t.Hint.Hints.Count(h => h == HintColors.Black) > 0 && t.Hint.Hints.Any(h => h == HintColors.White) == false).ToList();
+
+            // calculate all possible combinations of colors for this list and return those placements that fit these combinations
+
             return new List<Placement>();
         }
 
@@ -212,14 +216,19 @@ namespace MasterMindEngine
                     ApplyAllNoneRule(turn, ref result);
                 }
 
-                if(turn.Hint.Hints.Count(h=>h == HintColors.Black) == CodeLength)  // all black, no white
-                {
-                    ApplyAllBlackRule(turn, ref result);
-                }
-
                 if (turn.Hint.Hints.Count(h=>h == HintColors.Black) > 0 && turn.Hint.Hints.Count(h=>h == HintColors.Black) < CodeLength && turn.Hint.Hints.Count(h=>h == HintColors.White) == 0)  // only at least one black hint, no white hint
                 {
                     ApplyOnlyBlackRule(turn, ref result);
+                }
+
+                if (turn.Hint.Hints.Count(h=>h == HintColors.Black) == CodeLength)  // all black and no white
+                {
+                    throw new Exception("Impossible, the game would be over with this hint");
+                }
+
+                if (turn.Hint.Hints.Count(h=>h == HintColors.Black) > 0 && turn.Hint.Hints.Count(h=>h == HintColors.White) > 0 && turn.Hint.Hints.Count(h=>h == HintColors.None) == CodeLength)  
+                {
+                    ApplyAllHintsSetRule(turn, ref result);
                 }
             } 
             
@@ -227,18 +236,30 @@ namespace MasterMindEngine
             return result.Distinct();
         }
 
-        private static void ApplyOnlyBlackRule(Turn turn, ref List<Placement> result)
+        private static void ApplyAllHintsSetRule(Turn turn, ref List<Placement> result)
         {
-            // think about this
+            var colors = GetColorValues();
+            foreach (var color in colors.Where(c => turn.Placement.Code.Contains(c) == false))  // all colors that are not in the placement
+            {
+                for (int i = 0; i < CodeLength; i++)
+                {
+                    var p = Placement.CreateEmpty();
+                    p.Code[i] = color;
+                    result.Add(p);
+                }
+            }
         }
 
-        private static void ApplyAllBlackRule(Turn turn, ref List<Placement> result)
+        private static void ApplyOnlyBlackRule(Turn turn, ref List<Placement> result)
         {
-            ApplyAllNoneRule(turn, ref result); // this is the same as the all none rule
+            // think about whether something can be deduced here
         }
+
+
 
         private static void ApplyAllNoneRule(Turn turn, ref List<Placement> result)
         {
+            // all colors that are contained in the placement are forbidden
             var colors = GetColorValues();
             foreach (var color in colors.Where(c => turn.Placement.Code.Contains(c)))  // all colors that are in the placement
             {
@@ -253,6 +274,7 @@ namespace MasterMindEngine
 
         private static void ApplyOnlyWhiteRule(Turn turn, ref List<Placement> result)
         {
+            // all colors that are contained in the placement are forbidden at their current position
             var colors = GetColorValues();
             foreach (var color in colors.Where(c => turn.Placement.Code.Contains(c)))  // all colors that are in the placement
             {
@@ -266,6 +288,7 @@ namespace MasterMindEngine
 
         private static void ApplyAllWhiteRule(Turn turn, ref List<Placement> result)
         {
+            // all colors that are contained in the placement are forbidden at their current position and at all other colors are forbidden at all positions
             var colors = GetColorValues();
             foreach (var color in colors.Where(c => turn.Placement.Code.Contains(c) == false))  // all colors that are not in the placement
             {

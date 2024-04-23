@@ -1,18 +1,15 @@
-Please enter your hint:
-Black, Black
-I have 3 candidates to chose from.
-Secret code: Blue Red Green Orange
-Game turns:
-Turn 1     : Green Yellow Red Blue  - White White White None
-Turn 2     : Red Orange Yellow Green  - White White White None
-Turn 3     : Yellow Orange Green Red  - Black White White None
-Turn 4     : Yellow Green Orange Red  - White White White None
-Turn 5     : Purple Red Green Yellow  - Black Black None None
-Turn 6     : Orange Red Green Yellow  - Black Black None None
-Turn 7     : Blue Red Green Yellow  - Black Black Black None
-Turn 8     : Green Red Green Yellow  - Black Black None None
-Turn 9     : Yellow Red Green Yellow  - None None None None
-
 //
 
-Bug logs can be saved here.
+Please enter your hint:
+Black, White
+I have 16 candidates to chose from.
+Secret code: Yellow Blue Red Blue
+Game turns:
+Turn 1     : Blue Red Blue Green  - White White None None
+Turn 2     : Purple Green Red Orange  - Black None None None
+Turn 3     : Yellow Green Red Yellow  - Black Black None None
+Turn 4     : Green Green Blue Yellow  - White White None None
+Turn 5     : Yellow Green Purple Red  - Black White None None
+Turn 6     : Yellow Green Yellow Red  - Black White None None
+Turn 7     : Yellow Green Green Red  - Black White None None
+Turn 8     : Yellow Blue Red Blue  - None None None None
