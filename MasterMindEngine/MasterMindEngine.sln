@@ -5,7 +5,12 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMindEngine", "MasterMindEngine\MasterMindEngine.csproj", "{763495BD-793A-4519-83C0-E5EB3185E43B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindEngineTests", "MasterMindEngineTests\MasterMindEngineTests.csproj", "{733EC8EB-A464-419E-88F3-10538D30A17B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMindEngineTests", "MasterMindEngineTests\MasterMindEngineTests.csproj", "{733EC8EB-A464-419E-88F3-10538D30A17B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81AE234B-E1C0-456C-8C2C-1A8E5DE6C979}"
+	ProjectSection(SolutionItems) = preProject
+		..\scratchbook.txt = ..\scratchbook.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

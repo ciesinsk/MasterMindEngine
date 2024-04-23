@@ -13,3 +13,6 @@ Turn 7     : Blue Red Green Yellow  - Black Black Black None
 Turn 8     : Green Red Green Yellow  - Black Black None None
 Turn 9     : Yellow Red Green Yellow  - None None None None
 
+//
+
+Bug logs can be saved here.
