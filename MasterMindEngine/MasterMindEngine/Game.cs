@@ -101,7 +101,6 @@ namespace MasterMindEngine
                 return placements;
             }
 
-
             var firstTurn = Turns.First();
 
             var candidatePlacements =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint, enumOptions);
@@ -122,17 +121,17 @@ namespace MasterMindEngine
 
         private IEnumerable<Placement> ApplyAdditionalKnowledge(IEnumerable<Placement> candidatePlacements)
         {
-            var forbiddenPlacements = GenerateForbiddenPlacements();
+            var forbiddenPlacements = Enumerators.GenerateForbiddenPlacements(Turns);
+            var mandatoryPlacements = Enumerators.GenerateMandatoryPlacements(Turns);
 
             // remove forbidden placements from list of candidate placemments
+            candidatePlacements = candidatePlacements.Where(p=>p.FitsAny(forbiddenPlacements) == false);
+            candidatePlacements = candidatePlacements.Where(p=>p.FitsAll(mandatoryPlacements) == true);
 
             return candidatePlacements;
         }
 
-        private IEnumerable<Placement> GenerateForbiddenPlacements()
-        {
-            return new List<Placement>();
-        }
+
 
         private static Placement GetPlacementFromUser(string prompt)
         {

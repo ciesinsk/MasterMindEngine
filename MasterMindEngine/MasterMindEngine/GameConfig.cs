@@ -45,14 +45,11 @@ namespace MasterMindEngine
             ColorOnlyUsedOnce = 2 // each color is allowed to be used only once
         };
 
-        public static CodeColors[] GetColorValues(bool noneColor = false)
+        public static CodeColors[] GetColorValues()
         {
             var colors = ((CodeColors[])Enum.GetValues(typeof(CodeColors))).ToArray();
-
-            if (noneColor == false)
-            {
-                colors = colors.Where(c => c != CodeColors.None).ToArray();
-            }
+            
+            colors = colors.Where(c => c != CodeColors.None).ToArray();
 
             if(colors.Length < GameConfig.ColorCount)
             {

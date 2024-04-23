@@ -17,6 +17,13 @@ namespace MasterMindEngine
             TurnNumber = turnNumber;
         }
 
+        public Turn(Placement p, Hint hint,  int turnNumber) 
+        {
+            Placement = p;
+            Hint = hint;
+            TurnNumber = turnNumber;
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();

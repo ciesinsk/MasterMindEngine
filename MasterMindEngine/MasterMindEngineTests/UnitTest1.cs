@@ -63,6 +63,28 @@ namespace MasterMindEngineTests
         }
 
         [TestMethod]
+        public void TestEnumerationOfAdditionalPlacements()
+        {
+            GameConfig.SetConfigToDefault();
+
+            var t1 = new Turn(new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Blue, CodeColors.Yellow, CodeColors.Green }), new Hint(new HintColors[] { HintColors.White}), 1);
+            var t2 = new Turn(new Placement(new CodeColors[] { CodeColors.Blue, CodeColors.Purple, CodeColors.Yellow, CodeColors.Green }), new Hint(new HintColors[] { HintColors.White}), 2);
+
+            var forbiddenPlacements = Enumerators.GenerateForbiddenPlacements(new List<Turn>{t1, t2}).ToList();
+
+            Assert.AreEqual(6, forbiddenPlacements.Count);
+
+            var t3 = new Turn(new Placement(new CodeColors[] { CodeColors.Pink, CodeColors.Purple, CodeColors.Green, CodeColors.Green }), new Hint(new HintColors[] { HintColors.White, HintColors.White, HintColors.White, HintColors.White}), 3);
+
+
+            forbiddenPlacements = Enumerators.GenerateForbiddenPlacements(new List<Turn>{t1, t2, t3}).ToList();
+
+            Assert.AreEqual(19, forbiddenPlacements.Count);
+        }
+
+
+
+        [TestMethod]
         public void TestEnumerationOfPossibleMatching()
         {
             GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);

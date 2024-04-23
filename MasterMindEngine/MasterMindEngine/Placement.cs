@@ -9,9 +9,6 @@ namespace MasterMindEngine
     /// </summary>
     public class Placement: IEquatable<Placement>
     {
-        
-        
-
         /// <summary>
         /// Create an empty placement
         /// </summary>
@@ -181,6 +178,32 @@ namespace MasterMindEngine
             p.Code = colors;
 
             return p;
+        }
+
+        internal bool FitsAny(IEnumerable<Placement> forbiddenPlacements)
+        {
+            foreach(var p in forbiddenPlacements)
+            {
+                if(Fits(p))
+                {
+                    return true;
+                }
+            }   
+
+            return false;
+        }
+
+        internal bool FitsAll(IEnumerable<Placement> forbiddenPlacements)
+        {
+            foreach(var p in forbiddenPlacements)
+            {
+                if(Fits(p) == false)
+                {
+                    return false;
+                }
+            }   
+
+            return true;
         }
     }
 }
