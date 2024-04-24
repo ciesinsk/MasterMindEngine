@@ -1,15 +1,27 @@
-//
+
+Yellow
+Blue
+Red
+Green
+Orange
+Purple
+You can use each color multiple times.
+Please enter your secret code:
+Red, Purple, Orange, Blue
+The secret code is set. Let's start the game!
+I have 1296 candidates to chose from.
+Secret code: Red Purple Orange Blue
+Game turns:
+Turn 1     : Green Red Green Orange  - None None None None
 
 Please enter your hint:
-Black, White
-I have 16 candidates to chose from.
-Secret code: Yellow Blue Red Blue
+White, White
+I have 216 candidates to chose from.
+Secret code: Red Purple Orange Blue
 Game turns:
-Turn 1     : Blue Red Blue Green  - White White None None
-Turn 2     : Purple Green Red Orange  - Black None None None
-Turn 3     : Yellow Green Red Yellow  - Black Black None None
-Turn 4     : Green Green Blue Yellow  - White White None None
-Turn 5     : Yellow Green Purple Red  - Black White None None
-Turn 6     : Yellow Green Yellow Red  - Black White None None
-Turn 7     : Yellow Green Green Red  - Black White None None
-Turn 8     : Yellow Blue Red Blue  - None None None None
+Turn 1     : Green Red Green Orange  - White White None None
+Turn 2     : Orange Blue Purple Red  - None None None None
+
+Please enter your hint:
+White, White, White
+Something went wrong.

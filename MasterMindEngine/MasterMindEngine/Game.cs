@@ -113,25 +113,48 @@ namespace MasterMindEngine
             // it can happen that the next move is one of the moves already made - so remove them
             candidatePlacements = candidatePlacements.Except(Turns.Select(t => t.Placement));
 
+            // check the constraints of incomplete hint turns
+            candidatePlacements = ApplyColorChangeContraints(candidatePlacements);
+
             // generate and apply additional knowledge
-            candidatePlacements = ApplyAdditionalKnowledge(candidatePlacements);
+            candidatePlacements = ApplyForbiddenPlacementKnowledge(candidatePlacements);
 
             return candidatePlacements;
         }
 
-        private IEnumerable<Placement> ApplyAdditionalKnowledge(IEnumerable<Placement> candidatePlacements)
+        private IEnumerable<Placement> ApplyForbiddenPlacementKnowledge(IEnumerable<Placement> candidatePlacements)
         {
-            var forbiddenPlacements = Enumerators.GenerateForbiddenPlacements(Turns);
-            var mandatoryPlacements = Enumerators.GenerateMandatoryPlacements(Turns);
+            var forbiddenPlacements = Enumerators.GenerateForbiddenPlacements(Turns);            
 
             // remove forbidden placements from list of candidate placemments
-            candidatePlacements = candidatePlacements.Where(p=>p.FitsAny(forbiddenPlacements) == false);
-            candidatePlacements = candidatePlacements.Where(p=>p.FitsAll(mandatoryPlacements) == true);
-
+            candidatePlacements = candidatePlacements.Where(p=>p.FitsAny(forbiddenPlacements) == false);            
+                      
             return candidatePlacements;
         }
 
+        private IEnumerable<Placement> ApplyColorChangeContraints(IEnumerable<Placement> candidatePlacements)
+        {
+            var result = new List<Placement>();
 
+            foreach(var p in candidatePlacements)
+            {
+                var noneFittingTurns = Turns.Where(t=>p.FitsColorChangeContstraint(t) == false).ToList();
+
+                if(noneFittingTurns.Any() == false)
+                {
+                    result.Add(p);
+                }
+                else
+                {
+                    if(p.Equals(SecretCode))
+                    {
+                        throw new Exception("The secret code is not in the list of candidates #1. Something went wrong.");
+                    }
+                }
+            }                                  
+            
+            return result;
+        }
 
         private static Placement GetPlacementFromUser(string prompt)
         {

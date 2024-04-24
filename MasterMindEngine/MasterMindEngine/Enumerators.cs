@@ -186,15 +186,13 @@ namespace MasterMindEngine
             }                                                                      
         }
 
-        public static IEnumerable<Placement> GenerateMandatoryPlacements(IEnumerable<Turn> turns)
-        {
-            var turnsWithBlackOnlyHints = turns.Where(t => t.Hint.Hints.Count(h => h == HintColors.Black) > 0 && t.Hint.Hints.Any(h => h == HintColors.White) == false).ToList();
 
-            // calculate all possible combinations of colors for this list and return those placements that fit these combinations
-
-            return new List<Placement>();
-        }
-
+        /// <summary>
+        /// Generates a list of placements that are forbidden given the hints of the turns.
+        /// </summary>
+        /// <param name="turns"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static IEnumerable<Placement> GenerateForbiddenPlacements(IEnumerable<Turn> turns)
         {
             var result = new List<Placement>(); 
@@ -216,11 +214,6 @@ namespace MasterMindEngine
                     ApplyAllNoneRule(turn, ref result);
                 }
 
-                if (turn.Hint.Hints.Count(h=>h == HintColors.Black) > 0 && turn.Hint.Hints.Count(h=>h == HintColors.Black) < CodeLength && turn.Hint.Hints.Count(h=>h == HintColors.White) == 0)  // only at least one black hint, no white hint
-                {
-                    ApplyOnlyBlackRule(turn, ref result);
-                }
-
                 if (turn.Hint.Hints.Count(h=>h == HintColors.Black) == CodeLength)  // all black and no white
                 {
                     throw new Exception("Impossible, the game would be over with this hint");
@@ -231,10 +224,10 @@ namespace MasterMindEngine
                     ApplyAllHintsSetRule(turn, ref result);
                 }
             } 
-            
 
             return result.Distinct();
         }
+
 
         private static void ApplyAllHintsSetRule(Turn turn, ref List<Placement> result)
         {
@@ -249,13 +242,6 @@ namespace MasterMindEngine
                 }
             }
         }
-
-        private static void ApplyOnlyBlackRule(Turn turn, ref List<Placement> result)
-        {
-            // think about whether something can be deduced here
-        }
-
-
 
         private static void ApplyAllNoneRule(Turn turn, ref List<Placement> result)
         {

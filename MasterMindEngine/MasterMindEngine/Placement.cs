@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using static MasterMindEngine.GameConfig;
 
@@ -9,6 +10,11 @@ namespace MasterMindEngine
     /// </summary>
     public class Placement: IEquatable<Placement>
     {
+        /// <summary>
+        /// The actual placement of the colors, in the original game called "Code"
+        /// </summary>
+        public CodeColors[] Code { get; private set; } = new CodeColors[CodeLength];
+
         /// <summary>
         /// Create an empty placement
         /// </summary>
@@ -74,6 +80,68 @@ namespace MasterMindEngine
             return true;
         }
 
+        public bool FitsColorChangeContstraint(Turn turn)
+        {
+            var turnPlacement = turn.Placement.Clone();
+            var hint = turn.Hint;
+
+            var noneInHintCount = hint.Hints.Count(c=>c == HintColors.None);
+            var colorChangeCount = NumberOfDifferentColors(turnPlacement);
+
+            if(colorChangeCount < noneInHintCount)
+            {
+                return false;
+            }   
+
+            return true;
+        }
+
+        internal bool FitsAny(IEnumerable<Placement> forbiddenPlacements)
+        {
+            foreach(var p in forbiddenPlacements)
+            {
+                if(Fits(p))
+                {
+                    return true;
+                }
+            }   
+
+            return false;
+        }        
+
+        private int NumberOfDifferentColors(Placement other)
+        {
+            var count = 0;
+            var otherCode = other.Code.ToList(); // generate copy of othe code
+            for (int i = 0; i < CodeLength; i++)
+            {
+                var color = Code[i];
+                var indexInOther = otherCode.IndexOf(color);
+                if(indexInOther == -1)
+                {
+                    count++;
+                }
+                else
+                {
+                    otherCode[indexInOther] = CodeColors.None;
+                }                
+            }
+            return count;
+        }
+
+        internal bool FitsAll(IEnumerable<Placement> forbiddenPlacements)
+        {
+            foreach(var p in forbiddenPlacements)
+            {
+                if(Fits(p) == false)
+                {
+                    return false;
+                }
+            }   
+
+            return true;
+        }     
+
         /// <summary>
         /// Deep copy of the placement
         /// </summary>
@@ -89,11 +157,6 @@ namespace MasterMindEngine
             
             return new Placement(newCode);
         }
-
-        /// <summary>
-        /// The actual placement of the colors, in the original game called "Code"
-        /// </summary>
-        public CodeColors[] Code { get; private set; } = new CodeColors[CodeLength];
 
         /// <summary>
         /// Standard override of the ToString method
@@ -178,32 +241,6 @@ namespace MasterMindEngine
             p.Code = colors;
 
             return p;
-        }
-
-        internal bool FitsAny(IEnumerable<Placement> forbiddenPlacements)
-        {
-            foreach(var p in forbiddenPlacements)
-            {
-                if(Fits(p))
-                {
-                    return true;
-                }
-            }   
-
-            return false;
-        }
-
-        internal bool FitsAll(IEnumerable<Placement> forbiddenPlacements)
-        {
-            foreach(var p in forbiddenPlacements)
-            {
-                if(Fits(p) == false)
-                {
-                    return false;
-                }
-            }   
-
-            return true;
         }
     }
 }

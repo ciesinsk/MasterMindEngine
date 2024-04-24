@@ -240,10 +240,31 @@ namespace MasterMindEngineTests
 
             Assert.AreEqual(14, nextMoves.Count);
 
-
             nextMoves = Enumerators.GetPossibleNextPlacements(p1, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None })).ToList();
 
             Assert.AreEqual(14, nextMoves.Count);
+        }
+
+         [TestMethod]
+        public void TestColorConstraintCalculation()
+        {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
+            var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Yellow, CodeColors.Green, CodeColors.Blue });
+            var p2 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Yellow, CodeColors.Green, CodeColors.Blue });
+
+            var t1 = new Turn(p1, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None }), 1);
+
+            var result = p2.FitsColorChangeContstraint(t1);
+            Assert.IsFalse(result);
+
+            var p3 = new Placement(new CodeColors[] { CodeColors.Purple, CodeColors.Yellow, CodeColors.Green, CodeColors.Purple });
+
+            var t2 = new Turn(p3, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None }), 1);  
+
+            result = p2.FitsColorChangeContstraint(t2);
+
+            Assert.IsTrue(result);
         }
     }
 }
