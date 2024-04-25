@@ -41,7 +41,7 @@ namespace MasterMindEngine
         /// <returns>false if the placement is invalid</returns>
         public bool isValid(EnumOptions enumOptions)
         { 
-            if(enumOptions.HasFlag(EnumOptions.NoneIsAllowed) == false && Code.Any(c=>c == CodeColors.None))
+            if(Code.Any(c=>c == CodeColors.None))
             {
                 return false;
             }   

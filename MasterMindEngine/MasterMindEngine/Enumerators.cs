@@ -24,17 +24,10 @@ namespace MasterMindEngine
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<Placement> GetPlacements(CodeColors[] enumValues, EnumOptions enumOptions = EnumOptions.ColorOnlyUsedOnce) 
-        {
-            if(enumOptions.HasFlag(EnumOptions.NoneIsAllowed))
+        {            
+            if(enumValues.Contains(CodeColors.None))
             {
-                enumValues = new CodeColors[] { CodeColors.None }.Concat(enumValues).ToArray();
-            }
-            else
-            {
-                if(enumValues.Contains(CodeColors.None))
-                {
-                    throw new ArgumentException("None is not allowed in the enumValues array");
-                }
+                throw new ArgumentException("None is not allowed in the enumValues array");
             }
 
             enumValues = enumValues.Distinct().ToArray();

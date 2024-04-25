@@ -23,17 +23,10 @@ namespace MasterMindEngineTests
             p2 = p2.Distinct().ToList();
             Assert.AreEqual(256, p2.Count);
 
-                                            // 
-            var p3 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed).ToList();
-            Assert.AreEqual(625, p3.Count); // 4^4 = 256 + none allowe
-            p3 = p3.Distinct().ToList();
-            Assert.AreEqual(625, p3.Count);
-
-
-            var p4 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed|EnumOptions.ColorOnlyUsedOnce).ToList();
-            Assert.AreEqual(209, p4.Count); // 4^4 = 256 + none allowe
+            var p4 = Enumerators.GetPlacements(EnumOptions.ColorOnlyUsedOnce).ToList();
+            Assert.AreEqual(24, p4.Count); // 4^4 = 256 + none allowe
             p4 = p4.Distinct().ToList();
-            Assert.AreEqual(209, p4.Count);
+            Assert.AreEqual(24, p4.Count);
         }
 
         [TestMethod]
@@ -51,17 +44,10 @@ namespace MasterMindEngineTests
             p2 = p2.Distinct().ToList();
             Assert.AreEqual(1296, p2.Count);
 
-                                            // 
-            var p3 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed).ToList();
-            Assert.AreEqual(2401, p3.Count); // 4^4 = 256 + none allowe
-            p3 = p3.Distinct().ToList();
-            Assert.AreEqual(2401, p3.Count);
-
-
-            var p4 = Enumerators.GetPlacements(EnumOptions.NoneIsAllowed|EnumOptions.ColorOnlyUsedOnce).ToList();
-            Assert.AreEqual(1045, p4.Count); // 4^4 = 256 + none allowe
+            var p4 = Enumerators.GetPlacements(EnumOptions.ColorOnlyUsedOnce).ToList();
+            Assert.AreEqual(360, p4.Count); // 4^4 = 256 + none allowe
             p4 = p4.Distinct().ToList();
-            Assert.AreEqual(1045, p4.Count);
+            Assert.AreEqual(360, p4.Count);
         }
 
         [TestMethod]
@@ -280,14 +266,17 @@ namespace MasterMindEngineTests
             var h = Enumerators.AutoGenerateHint(p1, p2);
 
             Assert.IsTrue(h.Hints.Where(c=>c == HintColors.Black).Count() == 1);
-            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.White).Count() == 1);
+            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.White).Count() == 0);
 
             GameConfig.SetConfig(10, 6, 5, EnumOptionsDefault);
 
             p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Red, CodeColors.Red, CodeColors.Red, CodeColors.Yellow });
-            p2 = new Placement(new CodeColors[] { CodeColors.Purple, CodeColors.Green, CodeColors.Purple, CodeColors.Red, CodeColors.Pink });
+            p2 = new Placement(new CodeColors[] { CodeColors.Yellow, CodeColors.Green, CodeColors.Purple, CodeColors.Red, CodeColors.Pink });
 
             h = Enumerators.AutoGenerateHint(p1, p2);
+
+            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.Black).Count() == 1);
+            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.White).Count() == 1);
         }
     }
 }
