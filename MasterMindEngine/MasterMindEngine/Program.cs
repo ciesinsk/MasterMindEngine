@@ -15,9 +15,10 @@ namespace MasterMindEngine
             var clock = Stopwatch.StartNew();
 
             //GameConfig.SetConfig(10, 6, 4, GameConfig.EnumOptions.NoRestrictions);
-            GameConfig.SetConfig(10, 8, 5, EnumOptions.NoRestrictions, autoPlay: true);
-            var secretCode = new Placement(new CodeColors[] { CodeColors.Yellow, CodeColors.Red, CodeColors.Blue, CodeColors.Green, CodeColors.Red });
-            game.Play(secretCode);
+            GameConfig.SetConfig(10, 11, 5, EnumOptions.NoRestrictions, autoPlay: true);
+            //var secretCode = new Placement(new CodeColors[] { CodeColors.Blue, CodeColors.Red, CodeColors.Blue, CodeColors.Green, CodeColors.Red });
+            //game.Play(secretCode);
+            game.Play();
 
             clock.Stop();
             Console.WriteLine($"Game finished in {clock.Elapsed}");

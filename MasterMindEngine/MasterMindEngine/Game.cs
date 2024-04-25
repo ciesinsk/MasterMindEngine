@@ -31,6 +31,9 @@ namespace MasterMindEngine
         /// </summary>
         public void Play()
         {            
+            // clear cache used for this game
+            m_nextPlacementsCache.Clear();
+
             PrintGameIntroduction();
             
             if(SecretCode.isValid(GameConfig.CodeOptions) == false)
@@ -148,7 +151,7 @@ namespace MasterMindEngine
             var firstTurn = Turns.First();
             candidatePlacements = GetNextPlacementsWithCache(enumOptions, firstTurn);
 
-            Console.WriteLine($"Generated {candidatePlacements.Count()} candidate placements.");
+            //Console.WriteLine($"Generated {candidatePlacements.Count()} candidate placements.");
 
             foreach (var turn in Turns.Skip(1))
             {
@@ -159,17 +162,17 @@ namespace MasterMindEngine
             // it can happen that the next move is one of the moves already made - so remove them
             candidatePlacements = candidatePlacements.Except(Turns.Select(t => t.Placement));
 
-            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit each turns and hints.");
+            //Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit each turns and hints.");
 
             // check the constraints of incomplete hint turns
             candidatePlacements = ApplyColorChangeContraints(candidatePlacements);
 
-            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit color constaints of each turns and hints.");
+            //Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit color constaints of each turns and hints.");
 
             // generate and apply additional knowledge
             candidatePlacements = ApplyForbiddenPlacementKnowledge(candidatePlacements);
 
-            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements after applying additional heuristics for each turn.");
+            //Console.WriteLine($"Keeping {candidatePlacements.Count()} placements after applying additional heuristics for each turn.");
 
             return candidatePlacements;
         }
@@ -179,7 +182,7 @@ namespace MasterMindEngine
             IEnumerable<Placement> candidatePlacements;
             if (m_nextPlacementsCache.ContainsKey(turn.TurnNumber))
             {
-                Console.WriteLine($"Using cached next placements for turn {turn.TurnNumber}");
+                //Console.WriteLine($"Using cached next placements for turn {turn.TurnNumber}");
                 candidatePlacements = m_nextPlacementsCache[turn.TurnNumber];
             }
             else
