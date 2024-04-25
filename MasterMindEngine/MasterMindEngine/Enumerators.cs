@@ -7,6 +7,16 @@ namespace MasterMindEngine
     /// </summary>
     public static class Enumerators
     {        
+        private static new List<Placement> m_placementCache = new List<Placement>(); // cache for placements
+
+        /// <summary>
+        /// Clears the placement cache
+        /// </summary>
+        public static void ClearCache()
+        {
+            m_placementCache.Clear();
+        }
+
         /// <summary>
         /// Enumerate all "normal" placements
         /// </summary>
@@ -14,9 +24,13 @@ namespace MasterMindEngine
         /// <returns></returns>
         public static IEnumerable<Placement> GetPlacements(EnumOptions enumOptions = EnumOptionsDefault)
         {
-            var enumValues = GetColorValues();
+            if(m_placementCache.Count() == 0)
+            {
+                var enumValues = GetColorValues();
+                m_placementCache = GetPlacements(enumValues, enumOptions).ToList();;
+            }
 
-            return GetPlacements(enumValues, enumOptions);
+            return m_placementCache;
         }
 
         /// <summary>

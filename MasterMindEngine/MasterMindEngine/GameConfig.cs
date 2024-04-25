@@ -24,6 +24,8 @@
             CodeLength = codeLength;
             CodeOptions = enumOptions;
             AutoPlay = autoPlay;
+
+            Enumerators.ClearCache();
         }
 
         public static void SetConfigToDefault()
