@@ -15,9 +15,7 @@ namespace MasterMindEngine
         private bool GameIsRunning { get; set; } = true;
 
         public void Play()
-        {
-            GameConfig.SetConfig(10, 8, 5, EnumOptions.NoRestrictions, autoPlay: false);
-
+        {            
             PrintGameIntroduction();
             
             SecretCode = GetPlacementFromUser("Please enter your secret code:");            
