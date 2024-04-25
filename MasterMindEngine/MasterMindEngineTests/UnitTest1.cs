@@ -1,4 +1,6 @@
 using MasterMindEngine;
+using System.Net.NetworkInformation;
+using System;
 using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngineTests
@@ -265,6 +267,27 @@ namespace MasterMindEngineTests
             result = p2.FitsColorChangeContstraint(t2);
 
             Assert.IsTrue(result);
+        }
+
+         [TestMethod]
+        public void TestAutoHint()
+        {
+            GameConfig.SetConfig(10, 4, 4, EnumOptionsDefault);
+
+            var p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Red, CodeColors.Red, CodeColors.Red });
+            var p2 = new Placement(new CodeColors[] { CodeColors.Blue, CodeColors.Red, CodeColors.Green, CodeColors.Blue });
+
+            var h = Enumerators.AutoGenerateHint(p1, p2);
+
+            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.Black).Count() == 1);
+            Assert.IsTrue(h.Hints.Where(c=>c == HintColors.White).Count() == 1);
+
+            GameConfig.SetConfig(10, 6, 5, EnumOptionsDefault);
+
+            p1 = new Placement(new CodeColors[] { CodeColors.Red, CodeColors.Red, CodeColors.Red, CodeColors.Red, CodeColors.Yellow });
+            p2 = new Placement(new CodeColors[] { CodeColors.Purple, CodeColors.Green, CodeColors.Purple, CodeColors.Red, CodeColors.Pink });
+
+            h = Enumerators.AutoGenerateHint(p1, p2);
         }
     }
 }

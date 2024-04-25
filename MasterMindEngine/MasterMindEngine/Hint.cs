@@ -3,7 +3,7 @@ using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
-    public class Hint
+    public class Hint : IEquatable<Hint>
     {                
         public Hint Clone()
         {
@@ -59,6 +59,70 @@ namespace MasterMindEngine
             }
 
             return p;
+        }
+
+        internal static Hint CreateEmpty()
+        {            
+            var hints = new HintColors[CodeLength];
+
+            for(var i = 0;i< CodeLength;++i)
+            {
+                 hints[i] = HintColors.None;
+            }                  
+
+            var hint = new  Hint(hints);
+            return hint;
+        }
+
+         /// <summary>
+        /// Standard override of the Equals method
+        /// </summary>
+        public bool Equals(Hint? other)
+        {
+            if(other == null)
+            {
+                return false;
+            }   
+
+            var hintList = Hints.OrderBy(h => h).ToList(); 
+            var otherHintList = other.Hints.OrderBy(h => h).ToList();
+
+            for (int i = 0; i < CodeLength; i++)
+            {
+                if(otherHintList[i] != hintList[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Standard override of the Equals method
+        /// </summary>
+        public override bool Equals(object? other)
+        {
+            var otherHint = other as Hint;
+            return Equals(otherHint);
+        }
+
+        /// <summary>
+        /// Standard override of the GetHashCode method
+        /// </summary>
+        public override int GetHashCode()
+        {
+            if (Hints == null) return 0;
+
+            var hintList = Hints.OrderBy(h => h).ToList(); 
+
+            unchecked
+            {
+                int hash = 17;
+                for(int i = 0; i < hintList.Count(); i++)
+                    hash = 31 * hash + hintList[i].GetHashCode();
+                return hash;
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ namespace MasterMindEngine
 
         public void Play()
         {
+            GameConfig.SetConfig(10, 8, 5, EnumOptions.NoRestrictions, autoPlay: false);
+
             PrintGameIntroduction();
             
             SecretCode = GetPlacementFromUser("Please enter your secret code:");            
@@ -73,8 +75,30 @@ namespace MasterMindEngine
                 
                 
                 // query the hint from the user
-                var hint = GetHintFomUser("Please enter your hint:");
-                turn.Hint = hint;
+                Hint hintSuggestion = Enumerators.AutoGenerateHint(placement, SecretCode);
+                Hint hint;
+                if (AutoPlay)
+                {
+                    Console.WriteLine($"The hint for the last placement is: {hintSuggestion}");
+                    turn.Hint = hintSuggestion;
+                }
+                else
+                {
+                    var hintIsCorrect = false;
+                    while(hintIsCorrect == false)
+                    {
+                        hint = GetHintFomUser($"Please enter your hint ({hintSuggestion.ToString()}):");
+                        if(hint.Equals(hintSuggestion) == false)
+                        {
+                            Console.WriteLine("The hint does not match the calculated hint. Please try again.");
+                        }
+                        else
+                        {
+                            hintIsCorrect = true;
+                            turn.Hint = hint;
+                        }                    
+                    }
+                }                
             }            
         }
 
@@ -92,32 +116,61 @@ namespace MasterMindEngine
             return placementList[index];
         }
 
+        private Dictionary<int, List<Placement>> m_nextPlacementsDatabase = new Dictionary<int, List<Placement>>();
+
         private IEnumerable<Placement> CalculateCandidatePlacements(EnumOptions enumOptions)
         {
-            if(Turns.Count == 0)
+            if (Turns.Count == 0)
             {
                 var placements = Enumerators.GetPlacements(enumOptions).ToList();
 
                 return placements;
             }
 
+            IEnumerable<Placement> candidatePlacements;
             var firstTurn = Turns.First();
+            candidatePlacements = GetNextPlacementsWithCache(enumOptions, firstTurn);
 
-            var candidatePlacements =  Enumerators.GetPossibleNextPlacements( firstTurn.Placement, firstTurn.Hint, enumOptions);
+            Console.WriteLine($"Generated {candidatePlacements.Count()} candidate placements.");
 
             foreach (var turn in Turns.Skip(1))
             {
-                candidatePlacements = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions).Intersect(candidatePlacements);                
-            }          
+                candidatePlacements = GetNextPlacementsWithCache(enumOptions, turn).Intersect(candidatePlacements); 
+                // Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions).Intersect(candidatePlacements);
+            }
 
             // it can happen that the next move is one of the moves already made - so remove them
             candidatePlacements = candidatePlacements.Except(Turns.Select(t => t.Placement));
 
+            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit each turns and hints.");
+
             // check the constraints of incomplete hint turns
             candidatePlacements = ApplyColorChangeContraints(candidatePlacements);
 
+            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit color constaints of each turns and hints.");
+
             // generate and apply additional knowledge
             candidatePlacements = ApplyForbiddenPlacementKnowledge(candidatePlacements);
+
+            Console.WriteLine($"Keeping {candidatePlacements.Count()} placements after applying additional heuristics for each turn.");
+
+            return candidatePlacements;
+        }
+
+        private IEnumerable<Placement> GetNextPlacementsWithCache(EnumOptions enumOptions, Turn turn)
+        {
+            IEnumerable<Placement> candidatePlacements;
+            if (m_nextPlacementsDatabase.ContainsKey(turn.TurnNumber))
+            {
+                Console.WriteLine($"Using cached next placements for turn {turn.TurnNumber}");
+                candidatePlacements = m_nextPlacementsDatabase[turn.TurnNumber];
+            }
+            else
+            {
+                Console.WriteLine($"Calculating next placements for turn {turn.TurnNumber}");
+                candidatePlacements = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions);
+                m_nextPlacementsDatabase[turn.TurnNumber] = candidatePlacements.ToList();
+            }
 
             return candidatePlacements;
         }
@@ -134,15 +187,13 @@ namespace MasterMindEngine
 
         private IEnumerable<Placement> ApplyColorChangeContraints(IEnumerable<Placement> candidatePlacements)
         {
-            var result = new List<Placement>();
-
             foreach(var p in candidatePlacements)
             {
                 var noneFittingTurns = Turns.Where(t=>p.FitsColorChangeContstraint(t) == false).ToList();
 
                 if(noneFittingTurns.Any() == false)
                 {
-                    result.Add(p);
+                    yield return p;
                 }
                 else
                 {
@@ -152,8 +203,6 @@ namespace MasterMindEngine
                     }
                 }
             }                                  
-            
-            return result;
         }
 
         private static Placement GetPlacementFromUser(string prompt)

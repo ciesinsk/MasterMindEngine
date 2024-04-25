@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -294,6 +295,53 @@ namespace MasterMindEngine
 
                 result.Add(p);
             }
+        }
+
+        public static Hint AutoGenerateHint(Placement p, Placement s)
+        {
+            var hintColors = new HintColors[CodeLength];
+
+            var pl = p.Code.ToList();
+            var sl = s.Code.ToList();
+
+            var k =0;
+            
+
+            for(var i = 0; i < CodeLength; ++i)
+            {
+                if(pl[i] == CodeColors.None || sl[i] == CodeColors.None)
+                {
+                    throw new ArgumentException("None is not allowed in auto hint genration");
+                }   
+
+                if(sl[i] == pl[i])
+                {
+                    hintColors[k++] = HintColors.Black;
+                    sl[i] = CodeColors.None; // mark as used
+                    pl[i] = CodeColors.None;                        
+                }
+            }
+
+            for(var i = 0; i < CodeLength; ++i)
+            {                
+                var color = pl[i];
+                if(color == CodeColors.None)
+                {
+                    continue;
+                }
+
+                var j = sl.IndexOf(color);
+                if (j != -1)
+                {
+                    hintColors[k++] = HintColors.White;
+                    sl[j] = CodeColors.None; // mark as used
+                    pl[i] = CodeColors.None;                        
+                }
+            }
+
+            var h = new Hint(hintColors.ToArray());
+
+            return h;
         }
     }
 }

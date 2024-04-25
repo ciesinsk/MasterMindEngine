@@ -18,13 +18,15 @@ namespace MasterMindEngine
         public static int CodeLength {get;private set; } = CodeLengthDefault; 
 
         public static EnumOptions CodeOptions { get; set; } = EnumOptions.ColorOnlyUsedOnce;
+        public static bool AutoPlay { get; private set; }
 
-        public static void SetConfig(int maxTurns, int colorCount, int codeLength, EnumOptions enumOptions)
+        public static void SetConfig(int maxTurns, int colorCount, int codeLength, EnumOptions enumOptions, bool autoPlay = false)
         {
             MaxTurns = maxTurns;
             ColorCount = colorCount;
             CodeLength = codeLength;
             CodeOptions = enumOptions;
+            AutoPlay = autoPlay;
         }
 
         public static void SetConfigToDefault()
