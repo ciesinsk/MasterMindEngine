@@ -17,13 +17,26 @@ namespace MasterMindEngine
         private bool GameIsRunning { get; set; } = true;
 
         /// <summary>
+        /// Play with a predefined secret code
+        /// </summary>
+        /// <param name="secretCode"></param>
+        public void Play(Placement secretCode)
+        {
+            SecretCode = secretCode;
+            Play();
+        }
+
+        /// <summary>
         /// Play the game with the current configuration
         /// </summary>
         public void Play()
         {            
             PrintGameIntroduction();
             
-            SecretCode = GetPlacementFromUser("Please enter your secret code:");            
+            if(SecretCode.isValid(GameConfig.CodeOptions) == false)
+            {
+                SecretCode = GetPlacementFromUser("Please enter your secret code:");            
+            }            
 
             Console.WriteLine("The secret code is set. Let's start the game!");
 
@@ -105,16 +118,19 @@ namespace MasterMindEngine
             }            
         }
 
+
+        private Random m_random = new Random(Guid.Parse("B1FC0F92-5A68-45D5-AE13-62BE095B7016").GetHashCode());
+
         /// <summary>
         /// Choose next placement randomly
         /// </summary>
         /// <param name="placements"></param>
         /// <returns></returns>
         private Placement ChoseNextPlacement(IEnumerable<Placement> placements) 
-        {
+        {            
             var placementList = placements.ToList();
 
-            var index = new Random().Next(placementList.Count());
+            var index = m_random.Next(placementList.Count());
 
             return placementList[index];
         }

@@ -43,9 +43,11 @@
             ColorOnlyUsedOnce = 1 // each color is allowed to be used only once
         };
 
+        public static CodeColors[] ColorEnumValues = ((CodeColors[])Enum.GetValues(typeof(CodeColors))).ToArray(); 
+
         public static CodeColors[] GetColorValues()
         {
-            var colors = ((CodeColors[])Enum.GetValues(typeof(CodeColors))).ToArray();
+            var colors = ColorEnumValues;
             
             colors = colors.Where(c => c != CodeColors.None).ToArray();
 
