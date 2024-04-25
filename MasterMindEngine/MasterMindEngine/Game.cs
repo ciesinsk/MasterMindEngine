@@ -8,12 +8,17 @@ namespace MasterMindEngine
     /// </summary>
     public class Game
     {
+        private Dictionary<int, List<Placement>> m_nextPlacementsCache = new Dictionary<int, List<Placement>>();
+
         private List<Turn> Turns = new List<Turn>();
 
         private Placement SecretCode { get; set; } = new Placement(new CodeColors[CodeLength]);
 
         private bool GameIsRunning { get; set; } = true;
 
+        /// <summary>
+        /// Play the game with the current configuration
+        /// </summary>
         public void Play()
         {            
             PrintGameIntroduction();
@@ -114,8 +119,6 @@ namespace MasterMindEngine
             return placementList[index];
         }
 
-        private Dictionary<int, List<Placement>> m_nextPlacementsDatabase = new Dictionary<int, List<Placement>>();
-
         private IEnumerable<Placement> CalculateCandidatePlacements(EnumOptions enumOptions)
         {
             if (Turns.Count == 0)
@@ -158,16 +161,16 @@ namespace MasterMindEngine
         private IEnumerable<Placement> GetNextPlacementsWithCache(EnumOptions enumOptions, Turn turn)
         {
             IEnumerable<Placement> candidatePlacements;
-            if (m_nextPlacementsDatabase.ContainsKey(turn.TurnNumber))
+            if (m_nextPlacementsCache.ContainsKey(turn.TurnNumber))
             {
                 Console.WriteLine($"Using cached next placements for turn {turn.TurnNumber}");
-                candidatePlacements = m_nextPlacementsDatabase[turn.TurnNumber];
+                candidatePlacements = m_nextPlacementsCache[turn.TurnNumber];
             }
             else
             {
                 Console.WriteLine($"Calculating next placements for turn {turn.TurnNumber}");
                 candidatePlacements = Enumerators.GetPossibleNextPlacements(turn.Placement, turn.Hint, enumOptions);
-                m_nextPlacementsDatabase[turn.TurnNumber] = candidatePlacements.ToList();
+                m_nextPlacementsCache[turn.TurnNumber] = candidatePlacements.ToList();
             }
 
             return candidatePlacements;

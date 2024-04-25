@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MasterMindEngine
+﻿namespace MasterMindEngine
 {
+    /// <summary>
+    /// Configuration for a game of MasterMind
+    /// </summary>
     public static class GameConfig
     {
         public const int MaxTurnsDefault = 10;

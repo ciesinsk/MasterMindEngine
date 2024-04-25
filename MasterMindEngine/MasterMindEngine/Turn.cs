@@ -3,6 +3,9 @@ using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
+    /// <summary>
+    /// Represents a turn in the game, which consists mainly of a placement and a hint
+    /// </summary>
     public class Turn
     {
         public Placement Placement { get; private set; }

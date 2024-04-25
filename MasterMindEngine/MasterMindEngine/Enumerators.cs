@@ -1,11 +1,4 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Sources;
-using static MasterMindEngine.GameConfig;
+﻿using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
@@ -94,6 +87,13 @@ namespace MasterMindEngine
             }
         }               
 
+        /// <summary>
+        /// Get only those placements that are possible for the next turn given the placement and the hint
+        /// </summary>
+        /// <param name="placement"></param>
+        /// <param name="hint"></param>
+        /// <param name="enumOptions"></param>
+        /// <returns></returns>
         public static IEnumerable<Placement> GetPossibleNextPlacements(Placement placement, Hint hint, EnumOptions enumOptions = EnumOptionsDefault)
         {
             var placements = new List<Placement>(); 
@@ -187,7 +187,6 @@ namespace MasterMindEngine
             }                                                                      
         }
 
-
         /// <summary>
         /// Generates a list of placements that are forbidden given the hints of the turns.
         /// </summary>
@@ -229,7 +228,61 @@ namespace MasterMindEngine
             return result.Distinct();
         }
 
+        /// <summary>
+        /// Generate a Hint automatically from a placement and a solution
+        /// </summary>
+        /// <param name="placement"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Hint AutoGenerateHint(Placement placement, Placement secret)
+        {
+            var hintColors = new HintColors[CodeLength];
 
+            var pl = placement.Code.ToList();
+            var sl = secret.Code.ToList();
+
+            var k =0;
+            
+
+            for(var i = 0; i < CodeLength; ++i)
+            {
+                if(pl[i] == CodeColors.None || sl[i] == CodeColors.None)
+                {
+                    throw new ArgumentException("None is not allowed in auto hint genration");
+                }   
+
+                if(sl[i] == pl[i])
+                {
+                    hintColors[k++] = HintColors.Black;
+                    sl[i] = CodeColors.None; // mark as used
+                    pl[i] = CodeColors.None;                        
+                }
+            }
+
+            for(var i = 0; i < CodeLength; ++i)
+            {                
+                var color = pl[i];
+                if(color == CodeColors.None)
+                {
+                    continue;
+                }
+
+                var j = sl.IndexOf(color);
+                if (j != -1)
+                {
+                    hintColors[k++] = HintColors.White;
+                    sl[j] = CodeColors.None; // mark as used
+                    pl[i] = CodeColors.None;                        
+                }
+            }
+
+            var h = new Hint(hintColors.ToArray());
+
+            return h;
+        }
+
+        // Section of special rules for forbidden placements
         private static void ApplyAllHintsSetRule(Turn turn, ref List<Placement> result)
         {
             var colors = GetColorValues();
@@ -295,53 +348,6 @@ namespace MasterMindEngine
 
                 result.Add(p);
             }
-        }
-
-        public static Hint AutoGenerateHint(Placement p, Placement s)
-        {
-            var hintColors = new HintColors[CodeLength];
-
-            var pl = p.Code.ToList();
-            var sl = s.Code.ToList();
-
-            var k =0;
-            
-
-            for(var i = 0; i < CodeLength; ++i)
-            {
-                if(pl[i] == CodeColors.None || sl[i] == CodeColors.None)
-                {
-                    throw new ArgumentException("None is not allowed in auto hint genration");
-                }   
-
-                if(sl[i] == pl[i])
-                {
-                    hintColors[k++] = HintColors.Black;
-                    sl[i] = CodeColors.None; // mark as used
-                    pl[i] = CodeColors.None;                        
-                }
-            }
-
-            for(var i = 0; i < CodeLength; ++i)
-            {                
-                var color = pl[i];
-                if(color == CodeColors.None)
-                {
-                    continue;
-                }
-
-                var j = sl.IndexOf(color);
-                if (j != -1)
-                {
-                    hintColors[k++] = HintColors.White;
-                    sl[j] = CodeColors.None; // mark as used
-                    pl[i] = CodeColors.None;                        
-                }
-            }
-
-            var h = new Hint(hintColors.ToArray());
-
-            return h;
-        }
+        }     
     }
 }

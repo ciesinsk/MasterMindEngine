@@ -3,8 +3,15 @@ using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
+    /// <summary>
+    /// A hint in context of a placement and a secret code
+    /// </summary>
     public class Hint : IEquatable<Hint>
     {                
+        /// <summary>
+        /// Clone a Hint
+        /// </summary>
+        /// <returns></returns>
         public Hint Clone()
         {
             var newHints = new HintColors[CodeLength];
@@ -16,7 +23,10 @@ namespace MasterMindEngine
             return new Hint(newHints);
         }
 
-
+        /// <summary>
+        /// The hint values of the Hint
+        /// </summary>
+        /// <param name="hints"></param>
         public Hint(HintColors[] hints)
         {
             Hints = hints;
@@ -35,6 +45,12 @@ namespace MasterMindEngine
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Parse a hint from a String (that, e.g., is entered by a user)
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         internal static Hint? Parse(string? v)
         {
             if(v == null)
@@ -61,6 +77,10 @@ namespace MasterMindEngine
             return p;
         }
 
+        /// <summary>
+        /// Create an empty Hint
+        /// </summary>
+        /// <returns></returns>
         internal static Hint CreateEmpty()
         {            
             var hints = new HintColors[CodeLength];
