@@ -31,6 +31,36 @@ namespace MasterMindEngine
             return placements.ElementAt(index);
         }
 
+        public static Placement GetPlacementFromUser(string prompt)
+        {
+            if(String.IsNullOrEmpty(prompt) == false)
+            {
+                Console.WriteLine(prompt);
+            }
+
+            Placement? p = null;
+
+            while (p == null)
+            {
+                try
+                {
+                    p = Placement.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                if(p?.isValid(GameConfig.CodeOptions) == false)
+                {
+                    Console.WriteLine("The placement is invalid. Please try again.");
+                    p = null;
+                }
+            }
+            
+            return p;
+        }
+
         /// <summary>
         /// Enumerate all "normal" placements
         /// </summary>

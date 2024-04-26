@@ -18,11 +18,11 @@ namespace MasterMindEngine
             {
                 var clock = Stopwatch.StartNew();
                 //GameConfig.SetConfig(10, 6, 4, GameConfig.EnumOptions.NoRestrictions);
-                GameConfig.SetConfig(10, 11, 5, EnumOptions.NoRestrictions, autoPlay: true);
+                GameConfig.SetConfig(10, 11, 5, EnumOptions.NoRestrictions, autoPlay: false);
                 //var secretCode = new Placement(new CodeColors[] { CodeColors.Blue, CodeColors.Red, CodeColors.Blue, CodeColors.Green, CodeColors.Red });
-                var secretCode = Enumerators.GetRandomPlacement();
-                game.Play(secretCode);
-                //game.Play();
+                //var secretCode = Enumerators.GetRandomPlacement();
+                //game.Play(secretCode);
+                game.Play();
                 clock.Stop();
                 Console.WriteLine($"Game finished in {clock.Elapsed}");
 

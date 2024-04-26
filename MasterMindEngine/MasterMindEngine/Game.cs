@@ -41,7 +41,7 @@ namespace MasterMindEngine
             
             if(SecretCode.isValid(GameConfig.CodeOptions) == false)
             {
-                SecretCode = GetPlacementFromUser("Please enter your secret code:");            
+                SecretCode = Enumerators.GetPlacementFromUser("Please enter your secret code:");            
             }            
 
             Console.WriteLine("The secret code is set. Let's start the game!");
@@ -229,35 +229,7 @@ namespace MasterMindEngine
             }                                  
         }
 
-        private static Placement GetPlacementFromUser(string prompt)
-        {
-            if(String.IsNullOrEmpty(prompt) == false)
-            {
-                Console.WriteLine(prompt);
-            }
 
-            Placement? p = null;
-
-            while (p == null)
-            {
-                try
-                {
-                    p = Placement.Parse(Console.ReadLine());
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-                if(p?.isValid(GameConfig.CodeOptions) == false)
-                {
-                    Console.WriteLine("The placement is invalid. Please try again.");
-                    p = null;
-                }
-            }
-            
-            return p;
-        }
 
         private static Hint GetHintFomUser(string prompt)
         {
@@ -285,14 +257,15 @@ namespace MasterMindEngine
 
         private static void PrintGameIntroduction()
         {
-            Console.WriteLine("Welcome to MasterMind! Try to guess the secret code in 10 turns or less.");
+            Console.WriteLine("Welcome to MasterMind! The Computer tries to guess the secret code in 10 turns or less.");
             Console.WriteLine($"The code is a {GameConfig.CodeLength} digit color code.");
-            Console.WriteLine("The colors are:");
+            
 
-            foreach (var color in GetColorValues())
-            {
-                Console.WriteLine(color);
-            }
+            Console.WriteLine("You can use the following colors:");
+
+            var colorValues = GameConfig.GetColorValues();
+            var colorsString = string.Join(", ", colorValues.Select(c => c.ToString()));    
+            Console.WriteLine($"{colorsString} ({colorValues.Length} colors)");
 
             if (GameConfig.CodeOptions.HasFlag(EnumOptions.ColorOnlyUsedOnce))
             {
