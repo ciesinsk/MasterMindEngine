@@ -26,6 +26,8 @@ namespace MasterMindEngine
             Play();
         }
 
+        public int NumberOfTurns => Turns.Count;
+
         /// <summary>
         /// Play the game with the current configuration
         /// </summary>
@@ -33,6 +35,7 @@ namespace MasterMindEngine
         {            
             // clear cache used for this game
             m_nextPlacementsCache.Clear();
+            Turns.Clear();
 
             PrintGameIntroduction();
             
@@ -122,7 +125,8 @@ namespace MasterMindEngine
         }
 
 
-        private Random m_random = new Random(Guid.Parse("B1FC0F92-5A68-45D5-AE13-62BE095B7016").GetHashCode());
+        private Random m_random = new Random(Guid.Parse("79267EB2-6D4B-4F8D-A9DF-02659B365FDC").GetHashCode());
+        
 
         /// <summary>
         /// Choose next placement randomly

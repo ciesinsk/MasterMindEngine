@@ -1,4 +1,5 @@
-﻿using static MasterMindEngine.GameConfig;
+﻿using System.Diagnostics;
+using static MasterMindEngine.GameConfig;
 
 namespace MasterMindEngine
 {
@@ -15,6 +16,19 @@ namespace MasterMindEngine
         public static void ClearCache()
         {
             m_placementCache.Clear();
+        }
+
+        private static Random m_random = new Random(Guid.Parse("B1FC0F92-5A68-45D5-AE13-62BE095B7016").GetHashCode());
+
+        /// <summary>
+        /// Selects a random placement
+        /// </summary>
+        /// <returns></returns>
+        public static Placement GetRandomPlacement()
+        {
+            var placements = GetPlacements();            
+            var index = m_random.Next(placements.Count());
+            return placements.ElementAt(index);
         }
 
         /// <summary>
