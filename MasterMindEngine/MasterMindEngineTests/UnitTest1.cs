@@ -243,14 +243,14 @@ namespace MasterMindEngineTests
 
             var t1 = new Turn(p1, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None }), 1);
 
-            var result = p2.FitsColorChangeContstraint(t1);
+            var result = p2.FitsColorChangeConstraint(t1);
             Assert.IsFalse(result);
 
             var p3 = new Placement(new CodeColors[] { CodeColors.Purple, CodeColors.Yellow, CodeColors.Green, CodeColors.Purple });
 
             var t2 = new Turn(p3, new Hint(new HintColors[] { HintColors.Black, HintColors.White, HintColors.None, HintColors.None }), 1);  
 
-            result = p2.FitsColorChangeContstraint(t2);
+            result = p2.FitsColorChangeConstraint(t2);
 
             Assert.IsTrue(result);
         }

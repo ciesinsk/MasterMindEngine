@@ -168,7 +168,7 @@ namespace MasterMindEngine
 
             //Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit each turns and hints.");
 
-            // check the constraints of incomplete hint turns
+            // apply the constraints of turns with incomplete hints
             candidatePlacements = ApplyColorChangeContraints(candidatePlacements);
 
             //Console.WriteLine($"Keeping {candidatePlacements.Count()} placements that fit color constaints of each turns and hints.");
@@ -213,23 +213,22 @@ namespace MasterMindEngine
         {
             foreach(var p in candidatePlacements)
             {
-                var noneFittingTurns = Turns.Where(t=>p.FitsColorChangeContstraint(t) == false).ToList();
+                var contradictingTurns = Turns.Where(t=>p.FitsColorChangeConstraint(t) == false).ToList();
 
-                if(noneFittingTurns.Any() == false)
+                if(contradictingTurns.Any() == false)
                 {
                     yield return p;
                 }
                 else
                 {
-                    if(p.Equals(SecretCode))
+                    // sanity check - if the secret code is not in the list of candidates anymore, something went wrong
+                    if (p.Equals(SecretCode))
                     {
                         throw new Exception("The secret code is not in the list of candidates #1. Something went wrong.");
                     }
                 }
             }                                  
         }
-
-
 
         private static Hint GetHintFomUser(string prompt)
         {

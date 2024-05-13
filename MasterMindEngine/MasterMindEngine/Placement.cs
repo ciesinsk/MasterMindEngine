@@ -60,6 +60,11 @@ namespace MasterMindEngine
                 return false;
             }
 
+            if(Code.Length != CodeLength)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -80,7 +85,7 @@ namespace MasterMindEngine
             return true;
         }
 
-        public bool FitsColorChangeContstraint(Turn turn)
+        public bool FitsColorChangeConstraint(Turn turn)
         {
             var turnPlacement = turn.Placement.Clone();
             var hint = turn.Hint;
