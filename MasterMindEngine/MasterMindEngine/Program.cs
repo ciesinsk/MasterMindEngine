@@ -29,11 +29,12 @@ namespace MasterMindEngine
                 gameClock.Stop();
 
                 var gameDuration = gameClock.Elapsed;
-                Console.WriteLine($"Game finished in {gameDuration.TotalSeconds:0.##}");
+                Console.WriteLine($"Game finished in {gameDuration.TotalSeconds:0.#}");
                 gameStats.Add(gameDuration.TotalSeconds);
                 nog --;
             }
-            Console.WriteLine($"{gameStats.Count} Games finished in {allclock.Elapsed.TotalSeconds:0.##}");
+
+            Console.WriteLine($"{gameStats.Count} Games finished in {allclock.Elapsed.TotalSeconds:0.#}");
             Console.WriteLine($"(Average per game: {gameStats.Average():0.##})");
         }
     }
